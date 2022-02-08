@@ -20,6 +20,7 @@ class ChartGenerator:
         ChartGenerator.randInts(0,255)[0]
         )
     randTheme = lambda: random.choice(["darkgrid" , "whitegrid" , "dark" , "white" , "ticks"])
+    randChoice = lambda arr: random.choice(arr)
 
     def __init__(self, chart_type: str):
         self.type = chart_type

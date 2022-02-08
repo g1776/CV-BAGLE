@@ -9,6 +9,11 @@ from utils import ChartGenerator
 
 
 class VerticalBarGenerator(ChartGenerator):
+    
+    LABELS = [
+        ("person", "age"),
+
+    ]
 
     def __init__(self):
         super().__init__("vertical-bar-chart")
@@ -28,7 +33,8 @@ class VerticalBarGenerator(ChartGenerator):
             bar_color = ChartGenerator.randHex()
 
         # generate plot
-        data = pd.DataFrame({"person": xs, "age": ys})
+        x_label, y_label = ChartGenerator.randChoice(VerticalBarGenerator.LABELS)
+        data = pd.DataFrame({x_label: xs, y_label: ys})
 
         fig, ax = plt.subplots(1,1, figsize=ChartGenerator.FIGSIZE)
 
