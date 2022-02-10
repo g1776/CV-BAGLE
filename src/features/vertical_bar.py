@@ -1,4 +1,3 @@
-from audioop import mul
 import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -46,8 +45,8 @@ class VerticalBarGenerator(ChartGenerator):
                     )
 
         # output
-        output_folder = os.path.join("..", "..", "volume", "raw")
-        fp = os.path.join(output_folder, f"{self.type}-{id}.png")
+        
+        fp = os.path.join(ChartGenerator.CHARTS_DIR, f"{self.type}-{id}.png")
         plt.savefig(fp)
 
 

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 class ChartGenerator:
 
-    CHARTS_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent, "volume", "raw")
+    CHARTS_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent, "volume", "raw")
     px = 1/plt.rcParams['figure.dpi']  # pixel in inches
     FIGSIZE = (1028*px, 1028*px)
 
