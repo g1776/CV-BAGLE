@@ -87,29 +87,32 @@ class BarGenerator(ChartGenerator):
 
         ax.set_title(labels.title, pad=title_padding)
 
-        if self.direction == "vertical":
-            sns.barplot(data=data,
-                        x=labels.x,
-                        y=labels.y,
-                        ax=ax,
-                        color = bar_color,
-                        **{'yerr':err}
-                        )
-            ChartGenerator.setRandTickParams(ax, 'x')
-            ChartGenerator.setRandTickParams(ax, 'y', labelrotation=False)
-        else:
-            sns.barplot(data=data,
-                        x=labels.y,
-                        y=labels.x,
-                        ax=ax,
-                        color = bar_color,
-                        **{'xerr':err}
-                        )
-            ChartGenerator.setRandTickParams(ax, 'y')
-            ChartGenerator.setRandTickParams(ax, 'x', labelrotation=False)
+        try:
+            if self.direction == "vertical":
+                sns.barplot(data=data,
+                            x=labels.x,
+                            y=labels.y,
+                            ax=ax,
+                            color = bar_color,
+                            **{'yerr':err}
+                            )
+                ChartGenerator.setRandTickParams(ax, 'x')
+                ChartGenerator.setRandTickParams(ax, 'y', labelrotation=False)
+            else:
+                sns.barplot(data=data,
+                            x=labels.y,
+                            y=labels.x,
+                            ax=ax,
+                            color = bar_color,
+                            **{'xerr':err}
+                            )
+                ChartGenerator.setRandTickParams(ax, 'y')
+                ChartGenerator.setRandTickParams(ax, 'x', labelrotation=False)
 
-        # output to png
-        self.save(id)
+            # output to png
+            self.save(id)
+        except:
+            print(f"Passing {self.type}-{id}. Ran into seaborn error.") # cannot figure out where certain value error is being thrown, so ignoring :/
 
 
 if __name__ == "__main__":
@@ -118,6 +121,6 @@ if __name__ == "__main__":
 
     for direction in BarGenerator.DIRECTIONS:
         bg = BarGenerator(direction)
-        for i in range(n):
+        for i in range(300, n):
             print(i,'/',n)
             bg.generate(i)
