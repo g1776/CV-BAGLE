@@ -61,7 +61,7 @@ class BarGenerator(ChartGenerator):
 
         self.direction = direction
     
-    def generate(self, id):
+    def generate(self, id, ax):
 
         # globals
         labels = ChartGenerator.randChoice(BarGenerator.LABELS)
@@ -80,10 +80,6 @@ class BarGenerator(ChartGenerator):
 
         # build data
         data = pd.DataFrame({labels.x: xs, labels.y: ys})
-
-
-        # generate plot
-        fig, ax = plt.subplots(1,1, figsize=ChartGenerator.FIGSIZE)
 
         ax.set_title(labels.title, pad=title_padding)
 
@@ -117,10 +113,12 @@ class BarGenerator(ChartGenerator):
 
 if __name__ == "__main__":
 
+    fig, ax = plt.subplots(1,1, figsize=ChartGenerator.FIGSIZE)
+
     n = 6000
 
     for direction in BarGenerator.DIRECTIONS:
         bg = BarGenerator(direction)
-        for i in range(300, n):
+        for i in range(669, n):
             print(i,'/',n)
-            bg.generate(i)
+            bg.generate(i, ax)
