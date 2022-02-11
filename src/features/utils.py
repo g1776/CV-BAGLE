@@ -74,21 +74,24 @@ class ChartGenerator:
 
 
 class RandLabelGenerator:
-    def __init__(self, x_label, y_label, title, x_func=lambda: None, y_func=lambda: None):
+    def __init__(self, x_label, y_label, title, x_func=lambda: None, y_func=lambda: None, unique_x=False, unique_y=False):
         '''
         Specify labels, title, as well as the functions that should be used to generate the random labels
         
         x_func (function): Function to call when generating random x labels.
         y_func (function): Function to call when generating random y labels.
+        unique_x (bool): Does x_func return a unique set of values (aka not random)? Default False.
+        unique_y (bool): Does y_func return a unique set of values (aka not random)? Default False.
         
         '''
-
 
         self.x = x_label
         self.y = y_label
         self.title = title
         self.x_func = x_func
         self.y_func = y_func
+        self.unique_x = unique_x
+        self.unique_y = unique_y
 
     
 
