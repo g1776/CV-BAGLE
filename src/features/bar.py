@@ -119,6 +119,6 @@ if __name__ == "__main__":
 
     for direction in BarGenerator.DIRECTIONS:
         bg = BarGenerator(direction)
-        for i in range(669, n):
+        for i in range(1447, n):
             print(i,'/',n)
             bg.generate(i, ax)

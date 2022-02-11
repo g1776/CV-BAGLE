@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib.pylab as pylab
+import matplotlib
 import seaborn as sns
 
 class ChartGenerator:
@@ -62,7 +63,11 @@ class ChartGenerator:
     def __init__(self, chart_type: str):
         self.type = chart_type
 
-    def generate(self, id):
+        matplotlib.use('Agg') # must change backend so the memory doesn't get used up
+
+    def generate(self, id, ax):
+        '''Please pass an id and a Matplotlib axis in your implementation of this method. At the end call self.save(id)'''
+
         pass
 
     def save(self, id):
