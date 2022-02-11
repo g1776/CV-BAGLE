@@ -71,7 +71,7 @@ class ChartGenerator:
             os.makedirs(directory)
         fp = os.path.join(directory, f"{self.type}-{id}.png")
         plt.savefig(fp)
-        plt.close()
+        plt.close('all')
 
 
 class RandLabelGenerator:
