@@ -114,7 +114,10 @@ class BarGenerator(ChartGenerator):
 
 if __name__ == "__main__":
 
+    n = 6000
+
     for direction in BarGenerator.DIRECTIONS:
         bg = BarGenerator(direction)
-        for i in range(1000):
+        for i in range(n):
+            print(i,'/',n)
             bg.generate(i)
