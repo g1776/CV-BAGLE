@@ -26,6 +26,7 @@ class ChartGenerator:
 
 
     # common chart randomization methods
+    @staticmethod
     def setRandTickParams (ax, xOrY, labelrotation = True, reverse_rotation = False): 
 
         rotation = 0
@@ -47,11 +48,12 @@ class ChartGenerator:
         grid_alpha = ChartGenerator.randFloats(0.3, 1)[0]
         )
 
+    @staticmethod
     def setRandFontsizes():
         tick_fontsize = ChartGenerator.randFloats(10, 15)[0]
         params = {'legend.fontsize': ChartGenerator.randFloats(5, 12)[0],
             'axes.labelsize': ChartGenerator.randFloats(13, 18)[0],
-            'axes.titlesize':ChartGenerator.randFloats(20, 30)[0],
+            'axes.titlesize':ChartGenerator.randFloats(20, 35)[0],
             'xtick.labelsize': tick_fontsize,
             'ytick.labelsize': tick_fontsize}
         pylab.rcParams.update(params)
@@ -62,6 +64,14 @@ class ChartGenerator:
 
     def generate(self, id):
         pass
+
+    def save(self, id):
+        directory = os.path.join(ChartGenerator.CHARTS_DIR, self.type)
+        if not os.path.isdir(directory):
+            os.makedirs(directory)
+        fp = os.path.join(directory, f"{self.type}-{id}.png")
+        plt.savefig(fp)
+
 
 class RandLabelGenerator:
     def __init__(self, x_label, y_label, title, x_func=lambda: None, y_func=lambda: None):
