@@ -18,13 +18,13 @@ class BarGenerator(ChartGenerator):
         RandLabelGenerator("Person", 
                             "Age", 
                             "Ages of People", 
-                            x_func=lambda: BarGenerator.fake.name(), 
+                            x_func=lambda: BarGenerator.fake.first_name(), 
                             y_func=lambda: ChartGenerator.randFloats(1,100)[0]
                             ),
         RandLabelGenerator("Cat", 
                             "# Whiskers", 
                             "# Whiskers on cats affected by nuclear meltdowns",
-                            x_func=lambda: BarGenerator.fake.name(),
+                            x_func=lambda: BarGenerator.fake.first_name(),
                             y_func=lambda: ChartGenerator.randFloats(1,100)[0]
                             ),
         RandLabelGenerator("Grade", 
@@ -72,7 +72,7 @@ class BarGenerator(ChartGenerator):
         xs = [labels.x_func() for _ in range(n_bars)] if not labels.unique_x else labels.x_func()
         multiple_colors = ChartGenerator.randBool()
         show_err = ChartGenerator.randBool()
-        err = ChartGenerator.randFloats(0, max(ys)/15, size = n_bars) if show_err else []
+        err = ChartGenerator.randFloats(0, max(ys)/15, size = n_bars) if show_err else [0]*n_bars
         bar_color = ChartGenerator.randHex() if not multiple_colors else None
         title_padding = ChartGenerator.randFloats(15, 40)[0]
         ChartGenerator.setRandTheme()
@@ -93,7 +93,7 @@ class BarGenerator(ChartGenerator):
                         y=labels.y,
                         ax=ax,
                         color = bar_color,
-                        **{'yerr':err if show_err else [0]*n_bars}
+                        **{'yerr':err}
                         )
             ChartGenerator.setRandTickParams(ax, 'x')
             ChartGenerator.setRandTickParams(ax, 'y', labelrotation=False)
@@ -103,7 +103,7 @@ class BarGenerator(ChartGenerator):
                         y=labels.x,
                         ax=ax,
                         color = bar_color,
-                        **{'xerr':err if show_err else [0]*n_bars}
+                        **{'xerr':err}
                         )
             ChartGenerator.setRandTickParams(ax, 'y')
             ChartGenerator.setRandTickParams(ax, 'x', labelrotation=False)
