@@ -122,13 +122,6 @@ class StackedBarGenerator(ChartGenerator):
         # save to png
         self.save(id)
 
-        # try:
-        #     # plot figure here
-        #     self.save(id)
-        # except:
-        #     print(f"Passing {self.type}-{id}. Ran into seaborn error.") # cannot figure out where certain value error is being thrown, so ignoring :/
-
-
 if __name__ == "__main__":
 
     n = 10
