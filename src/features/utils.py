@@ -28,11 +28,11 @@ class ChartGenerator:
 
     # common chart randomization methods
     @staticmethod
-    def setRandTickParams (ax, xOrY, labelrotation = True, reverse_rotation = False): 
+    def setRandTickParams (ax, xOrY, labelrotation = True, reverse_rotation = False, rotations=[]): 
 
         rotation = 0
         if labelrotation:
-            rotation = ChartGenerator.randChoice([0, 45, 90])
+            rotation = ChartGenerator.randChoice([0, 45, 90] if rotations == [] else rotations)
             if reverse_rotation:
                 rotation *= -1
 
@@ -52,11 +52,12 @@ class ChartGenerator:
     @staticmethod
     def setRandFontsizes():
         tick_fontsize = ChartGenerator.randFloats(10, 15)[0]
-        params = {'legend.fontsize': ChartGenerator.randFloats(5, 12)[0],
+        params = {'legend.fontsize': ChartGenerator.randFloats(10, 16)[0],
             'axes.labelsize': ChartGenerator.randFloats(13, 18)[0],
             'axes.titlesize':ChartGenerator.randFloats(20, 35)[0],
             'xtick.labelsize': tick_fontsize,
-            'ytick.labelsize': tick_fontsize}
+            'ytick.labelsize': tick_fontsize,
+            }
         pylab.rcParams.update(params)
 
 
@@ -71,6 +72,7 @@ class ChartGenerator:
         pass
 
     def save(self, id):
+        '''Save figure and close.'''
         directory = os.path.join(ChartGenerator.CHARTS_DIR, self.type)
         if not os.path.isdir(directory):
             os.makedirs(directory)
@@ -80,14 +82,19 @@ class ChartGenerator:
 
 
 class RandLabelGenerator:
-    def __init__(self, x_label, y_label, title, x_func=lambda: None, y_func=lambda: None, unique_x=False, unique_y=False):
+
+    MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    LETTER_GRADES = ["A", "B", "C", "D", "E", "F"]
+
+    def __init__(self, x_label, y_label, title, x_func=lambda: None, y_func=lambda: None, unique_x=False, unique_y=False, categories=None):
         '''
-        Specify labels, title, as well as the functions that should be used to generate the random labels
+        Specify labels, title, as well as the functions that should be used to generate the random labels and values on each axis. A dimension, called "categories", is also provided if needed.
         
         x_func (function): Function to call when generating random x labels.
         y_func (function): Function to call when generating random y labels.
         unique_x (bool): Does x_func return a unique set of values (aka not random)? Default False.
         unique_y (bool): Does y_func return a unique set of values (aka not random)? Default False.
+        categories (list): List of categories to plot. Default None.
         
         '''
 
@@ -98,6 +105,10 @@ class RandLabelGenerator:
         self.y_func = y_func
         self.unique_x = unique_x
         self.unique_y = unique_y
+        self.categories = categories
+    
+    def __str__(self):
+        return f"RandLabelGenerator: \"{self.title}\"\nx: {self.x}\ny: {self.y}"
 
     
 
