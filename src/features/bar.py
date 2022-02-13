@@ -30,14 +30,14 @@ class BarGenerator(ChartGenerator):
         RandLabelGenerator("Grade", 
                             "Frequency", 
                             "Distribution of Letter Grades in the 4th Grade",
-                            x_func=lambda: ["A", "B", "C", "D", "E", "F"],
+                            x_func=lambda: RandLabelGenerator.LETTER_GRADES,
                             y_func=lambda: ChartGenerator.randFloats(1,30)[0],
                             unique_x=True
                             ),
         RandLabelGenerator("Month", 
                             "# Days", 
                             "Number of Rainy Days in each Month",
-                            x_func=lambda: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                            x_func=lambda: RandLabelGenerator.MONTHS,
                             y_func=lambda: ChartGenerator.randFloats(0,32)[0],
                             unique_x=True
                             ),
@@ -47,6 +47,36 @@ class BarGenerator(ChartGenerator):
                             x_func=lambda: list(range(1970, 1981)),
                             y_func=lambda: ChartGenerator.randFloats(200, 700)[0],
                             unique_x=True
+                            ),
+        RandLabelGenerator("File Path",
+                            "Size (MB)",
+                            "Comparison of File Sizes on My Computer",
+                            x_func=lambda: BarGenerator.fake.file_path(depth=2),
+                            y_func=lambda: ChartGenerator.randFloats(40, 400)[0],
+                            ),
+        RandLabelGenerator("City",
+                            "Area (Sq km)",
+                            "Area of Cities",
+                            x_func=lambda: BarGenerator.fake.city(),
+                            y_func=lambda: ChartGenerator.randFloats(1500, 8000)[0],
+                            ),
+        RandLabelGenerator("Country",
+                            "Population (Millions)",
+                            "Country Populations",
+                            x_func=lambda: BarGenerator.fake.city(),
+                            y_func=lambda: ChartGenerator.randFloats(0.2, 100)[0],
+                            ),
+        RandLabelGenerator("Street",
+                            "Length (km)",
+                            f"Lengths of Streets in Europe",
+                            x_func=lambda: BarGenerator.fake.street_name(),
+                            y_func=lambda: ChartGenerator.randFloats(5, 50)[0],
+                            ),
+        RandLabelGenerator("Occupation",
+                            "Yearly Salary (in thousands)",
+                            f"Lengths of Streets in Europe",
+                            x_func=lambda: BarGenerator.fake.job(),
+                            y_func=lambda: ChartGenerator.randFloats(30, 120)[0],
                             )
         
     ]
@@ -61,7 +91,7 @@ class BarGenerator(ChartGenerator):
 
         self.direction = direction
     
-    def generate(self, id, ax):
+    def generate(self, id):
 
         # globals
         labels = ChartGenerator.randChoice(BarGenerator.LABELS)
@@ -81,6 +111,8 @@ class BarGenerator(ChartGenerator):
         # build data
         data = pd.DataFrame({labels.x: xs, labels.y: ys})
 
+        # plot
+        fig, ax = plt.subplots(1,1, figsize=ChartGenerator.FIGSIZE)
         ax.set_title(labels.title, pad=title_padding)
 
         try:
@@ -113,12 +145,12 @@ class BarGenerator(ChartGenerator):
 
 if __name__ == "__main__":
 
-    fig, ax = plt.subplots(1,1, figsize=ChartGenerator.FIGSIZE)
-
     n = 6000
 
     for direction in BarGenerator.DIRECTIONS:
         bg = BarGenerator(direction)
-        for i in range(1447, n):
-            print(i,'/',n)
-            bg.generate(i, ax)
+        for i in range(n):
+            if i%50==0:
+                print(i,'/',n)
+            bg.generate(i)
+    
