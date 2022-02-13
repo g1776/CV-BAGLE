@@ -1,3 +1,5 @@
+from email.policy import strict
+from multiprocessing.sharedctypes import Value
 from matplotlib.colors import LinearSegmentedColormap
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -11,16 +13,17 @@ class StackedBarGenerator(ChartGenerator):
     fake = Faker()
 
     @staticmethod
-    def stacked_ys(n_stacks, tops=[], labels=[]):
+    def stacked_ys(n_stacks, tops=[], labels=[], normalize=False):
         '''Helper function to generate N stacks of ys
 
-        tops (list, optional): the maximum tops of each portion of the stack. must be of length N.
+        tops (list, optional): the maximum tops of each stack. Must be of length N.
         
         '''
 
         if tops != []:
             if len(tops) != n_stacks:
                 raise ValueError("Tops must be of length N")
+
         if labels != []:
             if len(labels) != n_stacks:
                 raise ValueError("Labels must be of length N")
@@ -39,8 +42,16 @@ class StackedBarGenerator(ChartGenerator):
             
             stack.update({labels[i]: top})
             last_stack_top = top
+
+        if normalize:
+            total = sum(stack.values(), 0.0) / 100
+            stack = {k: v / total for k, v in stack.items()}
+
         
-        return stack
+        return {
+            'normalized': normalize,
+            'stack': stack
+        }
 
     
     # Each of these instances provide the labels, as well as what functions to call to generate random values in each axis
@@ -53,10 +64,12 @@ class StackedBarGenerator(ChartGenerator):
                             unique_x=True,
                             ),
         RandLabelGenerator("Year", 
-                            "Revenue (USD)", 
+                            r"% of Revenue", 
                             "Revenue for Super Awesome Candy Co.", 
-                            x_func=lambda: list(range(1990, 2021)), 
-                            y_func=lambda: StackedBarGenerator.stacked_ys(5, labels=["Bars", "Chocolate", "Ice Cream", "Lollipops", "Frozen Treats"]),
+                            x_func=lambda: list(range(1990, 2002)), 
+                            y_func=lambda: StackedBarGenerator.stacked_ys(5, 
+                                                                    labels=["Bars", "Chocolate", "Ice Cream", "Lollipops", "Frozen Treats"], 
+                                                                    normalize=True),
                             unique_x=True,
                             ),
 
@@ -72,17 +85,21 @@ class StackedBarGenerator(ChartGenerator):
 
         # globals
         labels = ChartGenerator.randChoice(StackedBarGenerator.LABELS)
+        if labels.y_func()['normalized']:
+            self.type = "normalized-stacked-bar-chart"
+        else:
+            self.type = "stacked-bar-chart"
 
         # randomize parameters
-        n_bars = ChartGenerator.randInts(2, 10)[0] if not labels.x_func() else len(labels.x_func())
-        ys = [labels.y_func() for _ in range(n_bars)] if not labels.unique_y else labels.y_func()
+        n_bars = ChartGenerator.randInts(2, 10)[0] if not labels.unique_x else len(labels.x_func())
+        ys = [labels.y_func()['stack'] for _ in range(n_bars)] if not labels.unique_y else labels.y_func()
         xs = [labels.x_func() for _ in range(n_bars)] if not labels.unique_x else labels.x_func()
-        cmap = LinearSegmentedColormap.from_list("my_colormap", [ChartGenerator.randHex() for _ in range(len(labels.y_func()))])
+        cmap = LinearSegmentedColormap.from_list("my_colormap", [ChartGenerator.randHex() for _ in range(len(labels.y_func()['stack']))])
         title_padding = ChartGenerator.randFloats(15, 40)[0]
         ChartGenerator.setRandTheme()
         ChartGenerator.setRandFontsizes()
 
-        # # build data
+        # build data
         data = pd.DataFrame(ys)
         data.index = xs
 
@@ -91,7 +108,6 @@ class StackedBarGenerator(ChartGenerator):
         ax.set_title(labels.title, pad=title_padding)
         ax.set_xlabel(labels.x)
         ax.set_ylabel(labels.y)
-        
 
         data.plot(kind="bar",
                     stacked=True,
@@ -100,7 +116,7 @@ class StackedBarGenerator(ChartGenerator):
                     )
         
         ChartGenerator.setRandTickParams(ax, 'x')
-        ChartGenerator.setRandTickParams(ax, 'y', labelrotation=False)
+        ChartGenerator.setRandTickParams(ax, 'y', labelrotation=False, rotations=[45, 90])
         
 
         # save to png
