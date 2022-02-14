@@ -42,6 +42,7 @@ class RegressionPlotGenerator(ChartGenerator):
         multiple_colors = ChartGenerator.randBool()
         point_color = ChartGenerator.randHex() if not multiple_colors else None
         title_padding = ChartGenerator.randFloats(15, 40)[0]
+        marker_size = ChartGenerator.randFloats(200, 600)[0]
         ChartGenerator.setRandTheme()
         ChartGenerator.setRandFontsizes()
     
@@ -56,9 +57,16 @@ class RegressionPlotGenerator(ChartGenerator):
                     x=labels.x,
                     y=labels.y,
                     ax=ax,
-                    color=point_color,
-                    marker=plot_markers,
-                    fit_reg=self.regression_line)
+                    fit_reg=self.regression_line,
+                    scatter=False)
+        sns.scatterplot(data=data,
+                        x=labels.x,
+                        y=labels.y,
+                        ax=ax,
+                        color=point_color,
+                        marker=plot_markers,
+                        s=marker_size
+                        )
         ChartGenerator.setRandTickParams(ax, 'x')
         ChartGenerator.setRandTickParams(ax, 'y')
 
@@ -66,10 +74,10 @@ class RegressionPlotGenerator(ChartGenerator):
 
 if __name__ == "__main__":
 
-    n = 2
+    n = 10
 
     for regression_line in [True, False]:
         rg = RegressionPlotGenerator(regression_line)
-        for i in range(1, n):
+        for i in range(0, n):
             print(i,'/',n)
             rg.generate(i)
