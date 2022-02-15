@@ -27,6 +27,6 @@
 - line
 
 ## Shiv
-- scatter
+- scatter (with and without regression)
 - histogram
 - heatmap

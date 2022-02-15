@@ -72,7 +72,39 @@ class StackedBarGenerator(ChartGenerator):
                                                                     normalize=True),
                             unique_x=True,
                             ),
-
+        RandLabelGenerator("Division", 
+                            "Demographics Distribution (%)", 
+                            "Demographics for each company division", 
+                            x_func=lambda: ["HR", "IT", "Business", "Eng"], 
+                            y_func=lambda: StackedBarGenerator.stacked_ys(5, 
+                                                                    labels=["White", "Black", "Latino", "Asian", "Other"], 
+                                                                    normalize=True),
+                            unique_x=True,
+                            ),
+        RandLabelGenerator("Gender", 
+                            "Gender Distribution (%)", 
+                            "Gender distributions for each company division", 
+                            x_func=lambda: ["HR", "IT", "Business", "Eng"], 
+                            y_func=lambda: StackedBarGenerator.stacked_ys(3, 
+                                                                    labels=["Male", "Female", "Other"], 
+                                                                    normalize=True),
+                            unique_x=True,
+                            ),
+        RandLabelGenerator("Division", 
+                            "# of people", 
+                            "Demographic counts for each company division", 
+                            x_func=lambda: ["IT", "HR", "Relations", "Eng", "Business", "Field"], 
+                            y_func=lambda: StackedBarGenerator.stacked_ys(5, 
+                                                                    labels=["White", "Black", "Latino", "Asian", "Other"]),
+                            unique_x=True,
+                            ),
+        RandLabelGenerator("Person", 
+                            "# of cats", 
+                            "How many cats of each type do you own?", 
+                            x_func=lambda: StackedBarGenerator.fake.first_name(), 
+                            y_func=lambda: StackedBarGenerator.stacked_ys(4, 
+                                                                    labels=["Calico", "Black", "Garfield", "Hairless"])
+                            )
     ]
 
 
@@ -124,7 +156,7 @@ class StackedBarGenerator(ChartGenerator):
 
 if __name__ == "__main__":
 
-    n = 10
+    n = 6000
 
     sbg = StackedBarGenerator()
     for i in range(n):
