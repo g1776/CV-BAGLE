@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -138,8 +139,8 @@ class BarGenerator(ChartGenerator):
                 ChartGenerator.setRandTickParams(ax, 'x', labelrotation=False)
 
             # output to png
-            self.save(id)
-        except:
+            self.save(id, labels, data)
+        except ValueError:
             print(f"Passing {self.type}-{id}. Ran into seaborn error.") # cannot figure out where certain value error is being thrown, so ignoring :/
 
 

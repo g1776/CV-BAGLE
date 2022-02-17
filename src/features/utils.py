@@ -6,6 +6,16 @@ import matplotlib.pyplot as plt
 import matplotlib.pylab as pylab
 import matplotlib
 import seaborn as sns
+import io
+import pickle
+
+class GeneratedChart:
+
+    def __init__(self, img, labels: dict, data):
+        self.img = img
+        self.labels = labels
+        self.data = data
+
 
 class ChartGenerator:
 
@@ -71,13 +81,23 @@ class ChartGenerator:
 
         pass
 
-    def save(self, id):
+    def save(self, id, labels, data):
         '''Save figure and close.'''
         directory = os.path.join(ChartGenerator.CHARTS_DIR, self.type)
         if not os.path.isdir(directory):
             os.makedirs(directory)
-        fp = os.path.join(directory, f"{self.type}-{id}.png")
-        plt.savefig(fp)
+        fp = os.path.join(directory, f"{self.type}-{id}.pkl")
+        
+        # save to buffer and pickle
+        buf = io.BytesIO()
+        plt.savefig(buf)
+        buf.seek(0)
+
+        gc = GeneratedChart(buf, labels.to_dict(), data)
+        with open(fp, 'wb') as f:
+            pickle.dump(gc, f)
+
+        # cleanup
         plt.close('all')
 
 
@@ -106,11 +126,14 @@ class RandLabelGenerator:
         self.unique_x = unique_x
         self.unique_y = unique_y
         self.categories = categories
+
+    def to_dict(self):
+        return {
+            "title": self.title,
+            "x": self.x,
+            "y": self.y,
+            "categories": self.categories
+        }
     
     def __str__(self):
         return f"RandLabelGenerator: \"{self.title}\"\nx: {self.x}\ny: {self.y}"
-
-    
-
-
-
