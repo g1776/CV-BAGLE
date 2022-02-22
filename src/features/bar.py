@@ -2,6 +2,7 @@ from multiprocessing.sharedctypes import Value
 import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib
 import os
 from faker import Faker # https://faker.readthedocs.io/
 
@@ -75,7 +76,7 @@ class BarGenerator(ChartGenerator):
                             ),
         RandLabelGenerator("Occupation",
                             "Yearly Salary (in thousands)",
-                            f"Lengths of Streets in Europe",
+                            f"Salaries for Occupatations",
                             x_func=lambda: BarGenerator.fake.job(),
                             y_func=lambda: ChartGenerator.randFloats(30, 120)[0],
                             )
@@ -115,7 +116,6 @@ class BarGenerator(ChartGenerator):
         # plot
         fig, ax = plt.subplots(1,1, figsize=ChartGenerator.FIGSIZE)
         ax.set_title(labels.title, pad=title_padding)
-
         try:
             if self.direction == "vertical":
                 sns.barplot(data=data,
@@ -125,7 +125,12 @@ class BarGenerator(ChartGenerator):
                             color = bar_color,
                             **{'yerr':err}
                             )
-                ChartGenerator.setRandTickParams(ax, 'x')
+                
+                max_tick_length = max([len(str(label)) for label in data[labels.x]])
+                tick_fontsize = matplotlib.rcParams["xtick.labelsize"]
+                max_tck_pixel_size = max_tick_length * tick_fontsize
+                rotations = [] if max_tck_pixel_size < 90 else [90]
+                ChartGenerator.setRandTickParams(ax, 'x', rotations=rotations)
                 ChartGenerator.setRandTickParams(ax, 'y', labelrotation=False)
             else:
                 sns.barplot(data=data,
@@ -135,7 +140,12 @@ class BarGenerator(ChartGenerator):
                             color = bar_color,
                             **{'xerr':err}
                             )
-                ChartGenerator.setRandTickParams(ax, 'y')
+                
+                max_tick_length = max([len(str(label)) for label in data[labels.y]])
+                tick_fontsize = matplotlib.rcParams["xtick.labelsize"]
+                max_tck_pixel_size = max_tick_length * tick_fontsize
+                rotations = [] if max_tck_pixel_size < 90 else [90]
+                ChartGenerator.setRandTickParams(ax, 'y', rotations=rotations)
                 ChartGenerator.setRandTickParams(ax, 'x', labelrotation=False)
 
             # output to png

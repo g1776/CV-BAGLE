@@ -42,7 +42,8 @@ class ChartGenerator:
 
         rotation = 0
         if labelrotation:
-            rotation = ChartGenerator.randChoice([0, 45, 90] if rotations == [] else rotations)
+            rotations = [0, 45, 90] if rotations == [] else rotations
+            rotation = ChartGenerator.randChoice(rotations)
             if reverse_rotation:
                 rotation *= -1
 
@@ -82,7 +83,12 @@ class ChartGenerator:
         pass
 
     def save(self, id, labels, data):
-        '''Save figure and close.'''
+        '''Save figure and metadata to pickle and close.'''
+
+        # scale just in case
+        plt.tight_layout()
+
+
         directory = os.path.join(ChartGenerator.CHARTS_DIR, self.type)
         if not os.path.isdir(directory):
             os.makedirs(directory)

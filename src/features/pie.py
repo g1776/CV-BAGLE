@@ -116,7 +116,7 @@ class PieChartGenerator(ChartGenerator):
             ax.legend(labels=categories)
         
         # save to png
-        self.save(id)
+        self.save(id, labels, pcnts)
 
 if __name__ == "__main__":
 

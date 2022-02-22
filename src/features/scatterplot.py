@@ -2,6 +2,7 @@ from audioop import mul
 import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
+import math
 import os
 from faker import Faker # https://faker.readthedocs.io/
 
@@ -37,7 +38,13 @@ class RegressionPlotGenerator(ChartGenerator):
         
         # randomize parameters
         n_points = ChartGenerator.randInts(50, 100)[0] #if not labels.x_func() else len(labels.x_func())
-        ys = [labels.y_func() for _ in range(n_points)] if not labels.unique_y else labels.y_func()
+        transform = ChartGenerator.randChoice[
+            lambda y: math.pow(y, 2),
+            lambda y: math.log10(y),
+            lambda y: math.pow(y, 3),
+            lambda y: y,
+        ]
+        ys = [transform(labels.y_func()) for _ in range(n_points)] if not labels.unique_y else labels.y_func()
         xs = [labels.x_func() for _ in range(n_points)] if not labels.unique_x else labels.x_func()
         multiple_colors = ChartGenerator.randBool()
         point_color = ChartGenerator.randHex() if not multiple_colors else None

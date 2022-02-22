@@ -3,7 +3,7 @@ from PIL import Image
 import pickle
 import os
 
-my_fp = os.path.join(ChartGenerator.CHARTS_DIR, "horizontal-bar-chart",  "horizontal-bar-chart-0.pkl")
+my_fp = os.path.join(ChartGenerator.CHARTS_DIR, "pie-chart",  "pie-chart-0.pkl")
 
 with open(my_fp, 'rb') as f:
 

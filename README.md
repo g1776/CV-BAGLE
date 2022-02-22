@@ -3,13 +3,16 @@
 
 
 # Charts
-- Scatter (with and without trend line)
+- Scatter with trend line
+- Scatter
 - Horizontal Bar
 - Vertical Bar
 - Stacked Bar
+- Normalized Stacked Bar
 - Pie
 - Histogram
-- Box and Whisker
+- Horizontal Box and Whisker
+- Vertical Box and Whisker
 - Line
 - Heatmap
 

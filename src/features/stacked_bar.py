@@ -3,6 +3,7 @@ from multiprocessing.sharedctypes import Value
 from matplotlib.colors import LinearSegmentedColormap
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib
 from faker import Faker # https://faker.readthedocs.io/
 
 from utils import ChartGenerator, RandLabelGenerator
@@ -147,12 +148,15 @@ class StackedBarGenerator(ChartGenerator):
                     colormap=cmap
                     )
         
-        ChartGenerator.setRandTickParams(ax, 'x')
-        ChartGenerator.setRandTickParams(ax, 'y', labelrotation=False, rotations=[45, 90])
+        max_tick_length = max([len(str(label)) for label in data.index])
+        tick_fontsize = matplotlib.rcParams["xtick.labelsize"]
+        max_tck_pixel_size = max_tick_length * tick_fontsize
+        rotations = [] if max_tck_pixel_size < 90 else [90]
+        ChartGenerator.setRandTickParams(ax, 'x', rotations=rotations)
+        ChartGenerator.setRandTickParams(ax, 'y', labelrotation=False)
         
-
         # save to png
-        self.save(id)
+        self.save(id, labels, data)
 
 if __name__ == "__main__":
 
