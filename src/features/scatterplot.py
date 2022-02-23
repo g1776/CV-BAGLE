@@ -16,7 +16,32 @@ class RegressionPlotGenerator(ChartGenerator):
                         "Student Grades",
                         x_func=lambda: ChartGenerator.randFloats(0, 24)[0],
                         y_func=lambda: ChartGenerator.randFloats(0, 100)[0]
-                        )
+                        ),
+        
+        RandLabelGenerator("Miles Per Gallon",
+                           "Number of Gallons",
+                           "Miles Traveled",
+                           x_func=lambda: ChartGenerator.randFloats(0, 15)[0],
+                           y_func=lambda: ChartGenerator.randFloats(0, 400)[0]
+                           ),
+        
+        RandLabelGenerator("Cost per diamond Carat",
+                           "Diamond Carat",
+                           "Cost (in thousands)",
+                           x_func=lambda: ChartGenerator.randInts(1, 24)[0],
+                           y_func=lambda: ChartGenerator.randFloats(1, 200)[0]),
+        
+        RandLabelGenerator("Trees Per Acres of Land",
+                           "Acres",
+                           "Number of Trees(in hundreds)",
+                           x_func=lambda: ChartGenerator.randFloats(1, 10)[0],
+                           y_func=lambda: ChartGenerator.randInts(1, 8)[0]),
+        
+        RandLabelGenerator("Profits per Number of Employees",
+                           "Number of Employees",
+                           "Profits (in thousands)" ,
+                           x_func=lambda: ChartGenerator.randInts(50, 100)[0],
+                           y_func=lambda: ChartGenerator.randFloats(100, 500)[0])
         ]
     
     MARKERS = [".", "o", "v","^", "<", ">", "1", "2", "3", "4", "8", "s", "p", "+"]
@@ -38,12 +63,12 @@ class RegressionPlotGenerator(ChartGenerator):
         
         # randomize parameters
         n_points = ChartGenerator.randInts(50, 100)[0] #if not labels.x_func() else len(labels.x_func())
-        transform = ChartGenerator.randChoice[
+        transform = ChartGenerator.randChoice([
             lambda y: math.pow(y, 2),
             lambda y: math.log10(y),
             lambda y: math.pow(y, 3),
             lambda y: y,
-        ]
+        ])
         ys = [transform(labels.y_func()) for _ in range(n_points)] if not labels.unique_y else labels.y_func()
         xs = [labels.x_func() for _ in range(n_points)] if not labels.unique_x else labels.x_func()
         multiple_colors = ChartGenerator.randBool()
@@ -77,11 +102,11 @@ class RegressionPlotGenerator(ChartGenerator):
         ChartGenerator.setRandTickParams(ax, 'x')
         ChartGenerator.setRandTickParams(ax, 'y')
 
-        self.save(id)
+        self.save(id, labels, data)
 
 if __name__ == "__main__":
 
-    n = 10
+    n = 6000
 
     for regression_line in [True, False]:
         rg = RegressionPlotGenerator(regression_line)
