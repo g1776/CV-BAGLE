@@ -18,28 +18,28 @@ class RegressionPlotGenerator(ChartGenerator):
                         y_func=lambda: ChartGenerator.randFloats(0, 100)[0]
                         ),
         
-        RandLabelGenerator("Miles Per Gallon",
-                           "Number of Gallons",
-                           "Miles Traveled",
+        RandLabelGenerator("Number of Gallons",
+                           "Miles Travelled",
+                           "Miles Per Gallon",
                            x_func=lambda: ChartGenerator.randFloats(0, 15)[0],
                            y_func=lambda: ChartGenerator.randFloats(0, 400)[0]
                            ),
         
-        RandLabelGenerator("Cost per diamond Carat",
-                           "Diamond Carat",
+        RandLabelGenerator("Diamond Carat",
                            "Cost (in thousands)",
+                           "Cost per Diamond Carat",
                            x_func=lambda: ChartGenerator.randInts(1, 24)[0],
                            y_func=lambda: ChartGenerator.randFloats(1, 200)[0]),
         
-        RandLabelGenerator("Trees Per Acres of Land",
-                           "Acres",
-                           "Number of Trees(in hundreds)",
+        RandLabelGenerator("Acres",
+                           "Number of Trees(in hundred)",
+                           "Trees Per Acres of Land",
                            x_func=lambda: ChartGenerator.randFloats(1, 10)[0],
                            y_func=lambda: ChartGenerator.randInts(1, 8)[0]),
         
-        RandLabelGenerator("Profits per Number of Employees",
-                           "Number of Employees",
-                           "Profits (in thousands)" ,
+        RandLabelGenerator("Number of Employees",
+                           "Profits (in thousands)",
+                           "Profits per Number of Employees" ,
                            x_func=lambda: ChartGenerator.randInts(50, 100)[0],
                            y_func=lambda: ChartGenerator.randFloats(100, 500)[0])
         ]
@@ -90,7 +90,8 @@ class RegressionPlotGenerator(ChartGenerator):
                     y=labels.y,
                     ax=ax,
                     fit_reg=self.regression_line,
-                    scatter=False)
+                    scatter=False,
+                    ci = None)
         sns.scatterplot(data=data,
                         x=labels.x,
                         y=labels.y,
@@ -106,7 +107,7 @@ class RegressionPlotGenerator(ChartGenerator):
 
 if __name__ == "__main__":
 
-    n = 6000
+    n = 2
 
     for regression_line in [True, False]:
         rg = RegressionPlotGenerator(regression_line)
