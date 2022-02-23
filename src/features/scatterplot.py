@@ -27,7 +27,7 @@ class RegressionPlotGenerator(ChartGenerator):
         
         RandLabelGenerator("Diamond Carat",
                            "Cost (in thousands)",
-                           "Cost per Diamon Carat",
+                           "Cost per Diamond Carat",
                            x_func=lambda: ChartGenerator.randInts(1, 24)[0],
                            y_func=lambda: ChartGenerator.randFloats(1, 200)[0]),
         
