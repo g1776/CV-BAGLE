@@ -75,7 +75,7 @@ class ChartGenerator:
     def __init__(self, chart_type: str):
         self.type = chart_type
 
-        matplotlib.use('Agg') # must change backend so the memory doesn't get used up
+        # matplotlib.use('Agg') # must change backend so the memory doesn't get used up
 
     def generate(self, id, ax):
         '''Please pass an id and a Matplotlib axis in your implementation of this method. At the end call self.save(id)'''

@@ -11,42 +11,100 @@ from utils import ChartGenerator, RandLabelGenerator
 
 class BoxWhisker(ChartGenerator):
 
-	DIRECTIONS = ["vertical", "horizontal"]
+	DIRECTIONS = ["v", "h"]
 
 	fake = Faker()
 
 	LABELS = [
 		RandLabelGenerator("Class Number",
-						    "Score",
-						    "Exam Statistics by Class",
-						    #x_func =  a list with size 4 labeled [Class 1, Class 2, Class 3, Class 4]. Each class has 30 students 
-						    y_func =  ChartGenerator.randFloats(0,100)[0]
+							"Score",
+							"Exam Statistics by Class",
+							x_func = lambda: ["Class 1", "Class 2", "Class 3", "Class 4"],
+							y_func = lambda: ChartGenerator.randFloats(0,100)[0],
+							unique_x=True
 			),
 
 		RandLabelGenerator("Month",
 							"Units Sold",
 							"Units Sold in 2021 per Month",
-							x_func = RandLabelGenerator.MONTHS,
-							y_func = ChartGenerator.randFloats(0,1000)[0]
+							x_func = lambda: RandLabelGenerator.MONTHS,
+							y_func = lambda: ChartGenerator.randFloats(0,1000)[0]
 			)
 		]
 
-	def __init__(self):
-		super().__init__("box_and_whisker")
+	def __init__(self, dir):
+		super().__init__(f"{dir}-box-whisker-chart")
+
+		self.dir = dir
 
 	def generate(self, id):
 		labels = ChartGenerator.randChoice(BoxWhisker.LABELS)
-		n_box = ChartGenerator.randInts(2,10)[0] if not labels.x_func() else len(labels.x_func())
-		ys = [labels.y_func() for _ in range(n_box)] if not labels.unique_y else labels.y_func()
-		xs = [labels.x_func() for _ in range(n_box)] if not labels.unique_x else labels.y_func()
 
-		multiple_colors = ChartGenerator.randBool()
-		err = ChartGenerator.randFloats(0, max(ys)/15, size = n_box) if show_err else [0]*n_box
+		# randomize parameters
+		n_points_per_cat = 100
+		fliersize = ChartGenerator.randFloats(5, 10)[0]
+		has_outliers = ChartGenerator.randBool()
+		xs = labels.x_func()*n_points_per_cat
+		n_points = n_points_per_cat*len(labels.x_func())
+		ys = [labels.y_func() for _ in range(n_points)]
 
-		box_color = ChartGenerator.randHex() if not multiple_colors else None
+		# outlier calculation
+		
+		if has_outliers:
+
+			outlier_thresh = (max(ys) - min(ys)) / 2
+
+			outliers_high = ChartGenerator.randFloats(max(ys), max(ys)+outlier_thresh, size=ChartGenerator.randInts(1, 5)[0])
+			outliers_low = ChartGenerator.randFloats(min(ys)-outlier_thresh, min(ys), size=ChartGenerator.randInts(1, 5)[0])
+			ys.extend(outliers_high)
+			ys.extend(outliers_low)
+			for _ in range(len(outliers_high) + len(outliers_low)):
+				xs.append(
+					ChartGenerator.randChoice(labels.x_func())
+					)
+		
+		
 		title_padding = ChartGenerator.randFloats(15,40)[0]
 		ChartGenerator.setRandTheme()
 		ChartGenerator.setRandFontsizes()
 
+		print(len(xs), len(ys))
 		data = pd.DataFrame({labels.x: xs, labels.y: ys})
+		
+		# plot
+		fig, ax = plt.subplots(1,1, figsize=ChartGenerator.FIGSIZE)
+		ax.set_title(labels.title, pad=title_padding)
 
+		if self.dir == "v":
+			sns.boxplot(data=data,
+						x=labels.x,
+						y=labels.y,
+						orient=self.dir,
+						fliersize=fliersize,
+						linewidth = ChartGenerator.randFloats(1, 5)[0]
+			)
+		else:
+			sns.boxplot(data=data,
+						x=labels.y,
+						y=labels.x,
+						orient=self.dir,
+						fliersize=fliersize,
+						linewidth = ChartGenerator.randFloats(1, 5)[0]
+			)
+
+
+		plt.show()
+
+
+
+if __name__ == "__main__":
+
+	n = 1
+
+	for dir in BoxWhisker.DIRECTIONS:
+		bwg = BoxWhisker(dir)
+		for i in range(n):
+			if i%50==0:
+				print(i,'/',n)
+			bwg.generate(i)
+    
