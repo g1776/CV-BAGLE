@@ -11,10 +11,10 @@ from utils import ChartGenerator, RandLabelGenerator
 class HistogramGenerator(ChartGenerator):
     
     LABELS = [
-        RandLabelGenerator("Miles Ran During Marathon",
-                           "Miles",
-                           "y",
-                           x_func=lambda: ChartGenerator.randInt(0, 100)[0])
+        RandLabelGenerator("",
+                            "Miles",
+                            "Miles Ran During Marathon",
+                            x_func=lambda: ChartGenerator.randInts(0, 100)[0])
         ]
     
     STATS = ["count", "frequency", "proportion", "percent", "density"]
@@ -34,7 +34,7 @@ class HistogramGenerator(ChartGenerator):
         
         # randomize parameters
         data_amount = ChartGenerator.randInts(2000, 4000)[0]
-        xs = [labels.x_func for _ in range(data_amount)] if not labels.unique_x else labels.x_func()
+        xs = [labels.x_func() for _ in range(data_amount)] if not labels.unique_x else labels.x_func()
         stat = ChartGenerator.randChoice(HistogramGenerator.STATS)
         multiple_colors = ChartGenerator.randBool()
         bar_color = ChartGenerator.randHex() if not multiple_colors else None
@@ -44,25 +44,29 @@ class HistogramGenerator(ChartGenerator):
         
         #build data
         data = pd.DataFrame({labels.x: xs})
+        print(data)
         
         # plot
         fig, ax = plt.subplots(1,1, figsize=ChartGenerator.FIGSIZE)
         ax.set_title(labels.title, pad=title_padding)
         
         sns.histplot(data = data,
-                     x = labels.x,
-                     ax = ax,
-                     kde = self.kernel_density,
-                     color = bar_color,
-                     stat = stat)
+                    x = labels.x,
+                    ax = ax,
+                    kde = self.kernel_density,
+                    color = bar_color,
+                    stat = stat)
         ChartGenerator.setRandTickParams(ax, 'x')
         ChartGenerator.setRandTickParams(ax, 'y')
+
+        ax.set_ylabel(stat)
         
-        self.save(id, labels, data)
+        plt.show()
+        # self.save(id, labels, data)
 
 if __name__ == "__main__":
 
-    n = 2
+    n = 1
 
     for kernel_density in [True, False]:
         hg = HistogramGenerator(kernel_density)
@@ -70,5 +74,5 @@ if __name__ == "__main__":
             print(i,'/',n)
             hg.generate(i)
 
-                       
-                           
+                    
+                        
