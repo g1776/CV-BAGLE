@@ -33,3 +33,14 @@
 - scatter (with and without regression)
 - histogram
 - heatmap
+
+
+# Glyphs to extract
+- Points
+- Lines
+- Polygons
+
+# Labels to extract
+- Title
+- Axis labels
+- Legend?
