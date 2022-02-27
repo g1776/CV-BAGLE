@@ -11,10 +11,26 @@ from utils import ChartGenerator, RandLabelGenerator
 class HistogramGenerator(ChartGenerator):
     
     LABELS = [
-        RandLabelGenerator("",
-                            "Miles",
-                            "Miles Ran During Marathon",
-                            x_func=lambda: ChartGenerator.randInts(0, 100)[0])
+        RandLabelGenerator("Miles",
+                            "",
+                            "Miles Ran During Ultra-marathon",
+                            x_func=lambda: ChartGenerator.randInts(0, 100)[0]),
+        RandLabelGenerator("Age",
+                           "",
+                           "Age of Employees at Apple",
+                           x_func=lambda: ChartGenerator.randInts(14, 60)[0]),
+        RandLabelGenerator("Length (in ft)",
+                           "",
+                           "Length of Adult Elephant Trunks in West Africa",
+                           x_func=lambda: ChartGenerator.randFloats(5, 7)[0]),
+        RandLabelGenerator("Score",
+                           "",
+                           "MCAT Scores in 2021 From January to June",
+                           x_func=lambda: ChartGenerator.randInts(472, 530)[0]),
+        RandLabelGenerator("Time (in seconds)",
+                           "",
+                           "Various AutoML Cross-Validation Time for Classification",
+                           x_func= lambda: ChartGenerator.randFloats(30, 70)[0])
         ]
     
     STATS = ["count", "frequency", "proportion", "percent", "density"]
@@ -39,6 +55,7 @@ class HistogramGenerator(ChartGenerator):
         multiple_colors = ChartGenerator.randBool()
         bar_color = ChartGenerator.randHex() if not multiple_colors else None
         title_padding = ChartGenerator.randFloats(15, 40)[0]
+        fill = ChartGenerator.randBool()
         ChartGenerator.setRandTheme()
         ChartGenerator.setRandFontsizes()
         
@@ -55,18 +72,20 @@ class HistogramGenerator(ChartGenerator):
                     ax = ax,
                     kde = self.kernel_density,
                     color = bar_color,
-                    stat = stat)
+                    stat = stat,
+                    bins = ChartGenerator.randInts(30, 40)[0],
+                    fill = fill)
         ChartGenerator.setRandTickParams(ax, 'x')
         ChartGenerator.setRandTickParams(ax, 'y')
 
         ax.set_ylabel(stat)
         
-        plt.show()
-        # self.save(id, labels, data)
+        #plt.show()
+        self.save(id, labels, data)
 
 if __name__ == "__main__":
 
-    n = 1
+    n = 10
 
     for kernel_density in [True, False]:
         hg = HistogramGenerator(kernel_density)
