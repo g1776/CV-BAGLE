@@ -21,7 +21,7 @@ class ChartGenerator:
 
     CHARTS_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "raw") # I apologize
     px = 1/plt.rcParams['figure.dpi']  # pixel in inches
-    FIGSIZE = (1028*px, 1028*px)
+    FIGSIZE = (1400*px, 1400*px)
 
     # random generator functions
     randInts = lambda low, high, size=1: np.random.randint(low, high, size=size)
@@ -75,7 +75,7 @@ class ChartGenerator:
     def __init__(self, chart_type: str):
         self.type = chart_type
 
-        # matplotlib.use('Agg') # must change backend so the memory doesn't get used up
+        matplotlib.use('Agg') # must change backend so the memory doesn't get used up
 
     def generate(self, id, ax):
         '''Please pass an id and a Matplotlib axis in your implementation of this method. At the end call self.save(id)'''
@@ -112,7 +112,7 @@ class RandLabelGenerator:
     MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     LETTER_GRADES = ["A", "B", "C", "D", "E", "F"]
 
-    def __init__(self, x_label, y_label, title, x_func=lambda: None, y_func=lambda: None, unique_x=False, unique_y=False, categories=None):
+    def __init__(self, x_label, y_label, title, x_func=lambda: None, y_func=lambda: None, unique_x=False, unique_y=False, categories=None ,rot_y=[], rot_x=[]):
         '''
         Specify labels, title, as well as the functions that should be used to generate the random labels and values on each axis. A dimension, called "categories", is also provided if needed.
         
@@ -132,6 +132,8 @@ class RandLabelGenerator:
         self.unique_x = unique_x
         self.unique_y = unique_y
         self.categories = categories
+        self.rot_x = rot_x
+        self.rot_y = rot_y
 
     def to_dict(self):
         return {

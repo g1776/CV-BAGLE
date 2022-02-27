@@ -46,39 +46,44 @@ class BarGenerator(ChartGenerator):
         RandLabelGenerator("Year", 
                             "$ Profit (in Millions)", 
                             "Yearly Profits for the Super Awesome Chocolate Company",
-                            x_func=lambda: list(range(1970, 1981)),
+                            x_func=lambda: [str(v) for v in range(1970, 1981)],
                             y_func=lambda: ChartGenerator.randFloats(200, 700)[0],
                             unique_x=True
                             ),
         RandLabelGenerator("File Path",
                             "Size (MB)",
                             "Comparison of File Sizes on My Computer",
-                            x_func=lambda: BarGenerator.fake.file_path(depth=2),
+                            x_func=lambda: BarGenerator.fake.file_path(depth=0),
                             y_func=lambda: ChartGenerator.randFloats(40, 400)[0],
+                            rot_x=[-90, 90]
                             ),
         RandLabelGenerator("City",
                             "Area (Sq km)",
                             "Area of Cities",
                             x_func=lambda: BarGenerator.fake.city(),
                             y_func=lambda: ChartGenerator.randFloats(1500, 8000)[0],
+                            rot_x=[-90, 90]
                             ),
         RandLabelGenerator("Country",
                             "Population (Millions)",
                             "Country Populations",
                             x_func=lambda: BarGenerator.fake.city(),
                             y_func=lambda: ChartGenerator.randFloats(0.2, 100)[0],
+                            rot_x=[-90, 90]
                             ),
         RandLabelGenerator("Street",
                             "Length (km)",
                             f"Lengths of Streets in Europe",
                             x_func=lambda: BarGenerator.fake.street_name(),
                             y_func=lambda: ChartGenerator.randFloats(5, 50)[0],
+                            rot_x=[-90, 90]
                             ),
         RandLabelGenerator("Occupation",
                             "Yearly Salary (in thousands)",
                             f"Salaries for Occupatations",
                             x_func=lambda: BarGenerator.fake.job(),
                             y_func=lambda: ChartGenerator.randFloats(30, 120)[0],
+                            rot_x=[-90, 90]
                             )
         
     ]
@@ -125,12 +130,7 @@ class BarGenerator(ChartGenerator):
                             color = bar_color,
                             **{'yerr':err}
                             )
-                
-                max_tick_length = max([len(str(label)) for label in data[labels.x]])
-                tick_fontsize = matplotlib.rcParams["xtick.labelsize"]
-                max_tck_pixel_size = max_tick_length * tick_fontsize
-                rotations = [] if max_tck_pixel_size < 90 else [90]
-                ChartGenerator.setRandTickParams(ax, 'x', rotations=rotations)
+                ChartGenerator.setRandTickParams(ax, 'x', rotations=[90])
                 ChartGenerator.setRandTickParams(ax, 'y', labelrotation=False)
             else:
                 sns.barplot(data=data,
@@ -140,12 +140,7 @@ class BarGenerator(ChartGenerator):
                             color = bar_color,
                             **{'xerr':err}
                             )
-                
-                max_tick_length = max([len(str(label)) for label in data[labels.y]])
-                tick_fontsize = matplotlib.rcParams["xtick.labelsize"]
-                max_tck_pixel_size = max_tick_length * tick_fontsize
-                rotations = [] if max_tck_pixel_size < 90 else [90]
-                ChartGenerator.setRandTickParams(ax, 'y', rotations=rotations)
+                ChartGenerator.setRandTickParams(ax, 'y', rotations=[0])
                 ChartGenerator.setRandTickParams(ax, 'x', labelrotation=False)
 
             # output to png
