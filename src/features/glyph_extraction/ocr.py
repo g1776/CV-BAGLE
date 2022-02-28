@@ -1,7 +1,7 @@
 import pytesseract
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
+import pandas as pd
 from img_processing import set_contrast
 
 # config
@@ -17,7 +17,9 @@ def preprocess(im):
     gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
 
     # threshold the image
-    thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+    thresh = cv2.threshold(gray, 0, 255,
+        cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+    thresh = cv2.bitwise_not(thresh)
     thresh2 = thresh.copy()
 
 
@@ -26,13 +28,13 @@ def preprocess(im):
     # https://stackoverflow.com/questions/10262600/how-to-detect-region-of-large-of-white-pixels-using-opencv
     mask = np.zeros(thresh.shape,np.uint8)
     contours, _ = cv2.findContours(thresh,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+    areas = [cv2.contourArea(cnt) for cnt in contours]
+
+    avgArea = np.mean(areas)
 
     for cnt in contours:
-        if cv2.contourArea(cnt) > 10000:
+        if avgArea < cv2.contourArea(cnt):
             cv2.drawContours(mask,[cnt],0,255,-1)
-    plt.imshow(mask, cmap='gray', vmin=0, vmax=255)
-    plt.show()
-    
     
     # apply mask
     masked = cv2.bitwise_not(thresh2,thresh2,mask)
@@ -62,6 +64,9 @@ def preprocess(im):
 
 
 def get_text_bbs(im):
+
+    im =   np.array(im)
+
 
     im = preprocess(im)
     cv2.imshow('processed', cv2.resize(im, (500,500)))

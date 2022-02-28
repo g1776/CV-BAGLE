@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     for _ in range(n):
 
-        chart_folder = os.path.join(CHARTS_DIR, "pie-chart")
+        chart_folder = os.path.join(CHARTS_DIR, "horizontal-bar-chart")
         chart_fp = random.choice(glob.glob(os.path.join(chart_folder, '*.pkl')))
 
         # try:
