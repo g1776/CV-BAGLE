@@ -14,6 +14,7 @@ sys.path.append(
 
 from polygons import polygons
 from ocr import get_text_bbs
+        
 
 
 if __name__ == '__main__':
@@ -25,7 +26,7 @@ if __name__ == '__main__':
 
     for _ in range(n):
 
-        chart_folder = os.path.join(CHARTS_DIR, "horizontal-bar-chart")
+        chart_folder = os.path.join(CHARTS_DIR, "vertical-bar-chart")
         chart_fp = random.choice(glob.glob(os.path.join(chart_folder, '*.pkl')))
 
         # try:
@@ -40,20 +41,25 @@ if __name__ == '__main__':
             polys = polygons(im)
 
             # get labels
-            text_bbs = get_text_bbs(im)
+            text_bbs = get_text_bbs(im, psm=2)
 
-            # draw label bbs
+
+            # draw label bounding boxes in green
             for bb in text_bbs:
                 im = cv2.rectangle(im, bb[0], bb[1], (0, 255, 0), 2)
 
             # draw polys
             for poly in polys:
-                # finding center point of shape
+
+
+                # finding center point of shape and draw labels
                 M = cv2.moments(poly["contour"])
                 if M['m00'] != 0.0:
                     x = int(M['m10']/M['m00'])
                     y = int(M['m01']/M['m00'])
                     cv2.putText(im, poly["shape"], (x, y), *font)
+                
+                # draw contour in red
                 cv2.drawContours(im, [poly["contour"]], 0, (0, 0, 255), 5)
 
 

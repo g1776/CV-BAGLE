@@ -3,8 +3,7 @@ import numpy as np
 from img_processing import set_contrast
 
 
-def polygons(im):
-
+def process(im):
     # blur to hopefully eliminate text as identified contours
     blurred = cv2.GaussianBlur(im, (15, 15), 0)
 
@@ -14,8 +13,20 @@ def polygons(im):
     # edge detection
     edges = cv2.Canny(contrasted, 100, 200)
 
+    return edges
+
+
+def polygons(im, show_processed=False):
+
+    processed = process(im)
+
+    # optionally show processed image
+    if show_processed:
+        cv2.imshow('BBs processed', cv2.resize(processed, (500,500)))
+    
+
     # find contours
-    contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(processed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     
     # list for storing names of shapes. Skip first contour, as it represents the entire image.

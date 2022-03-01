@@ -1,12 +1,12 @@
 import pytesseract
 import cv2
 import numpy as np
-import pandas as pd
 from img_processing import set_contrast
 
 # config
 TESSERACT_DIR = r"C:\Users\grego\Documents\GitHub\DataVizCaptionGeneration\download\Tesseract-OCR\tesseract.exe"
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_DIR
+
 
 
 def preprocess(im):
@@ -63,25 +63,35 @@ def preprocess(im):
     return no_lines
 
 
-def get_text_bbs(im):
-
-    im =   np.array(im)
+def get_text_bbs(im, psm, show_processed=False):
 
 
-    im = preprocess(im)
-    cv2.imshow('processed', cv2.resize(im, (500,500)))
+    # preprocess
+    processed = preprocess(im)
 
-    # get image the dimensions
-    h, w, _ = im.shape # assumes color image
+    # optionally show processed image
+    if show_processed:
+        cv2.imshow('BBs processed', cv2.resize(processed, (500,500)))
+
+    # get image dimensions
+    h, w, _ = processed.shape # assumes color image
 
     # run tesseract, returning the bounding boxes
-    boxes = pytesseract.image_to_boxes(im, config="box --psm 2")
+    boxes = pytesseract.image_to_boxes(processed, config=f"box --psm {psm}")
+
     # draw the bounding boxes on the image
     pts = []
     for b in boxes.splitlines():
         b = b.split(' ')
         p1 = (int(b[1]), h - int(b[2]))
         p2 = (int(b[3]), h - int(b[4]))
+
+        # ignore bounding boxes that are > 60% of image dimensions
+        bw = abs(p1[0] - p2[0])
+        bh = abs(p1[1] - p2[1])
+        if bw > .6*w or bh > .6*h:
+            continue
+        
         pts.append((p1,p2))
 
     return pts
