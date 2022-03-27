@@ -1,4 +1,5 @@
 import pytesseract
+from pytesseract import Output
 import cv2
 import numpy as np
 from img_processing import set_contrast
@@ -74,24 +75,38 @@ def get_text_bbs(im, psm, show_processed=False):
         cv2.imshow('BBs processed', cv2.resize(processed, (500,500)))
 
     # get image dimensions
-    h, w, _ = processed.shape # assumes color image
+    img_h, img_w, _ = processed.shape # assumes color image
 
-    # run tesseract, returning the bounding boxes
-    boxes = pytesseract.image_to_boxes(processed, config=f"box --psm {psm}")
+    
+    data = pytesseract.image_to_data(processed, output_type=Output.DATAFRAME, config=f"box --psm {psm}")
 
-    # draw the bounding boxes on the image
-    pts = []
-    for b in boxes.splitlines():
-        b = b.split(' ')
-        p1 = (int(b[1]), h - int(b[2]))
-        p2 = (int(b[3]), h - int(b[4]))
+    # initialize p1 and p2
+    data["p1"] = None
+    data["p2"] = None
 
-        # ignore bounding boxes that are > 60% of image dimensions
-        bw = abs(p1[0] - p2[0])
-        bh = abs(p1[1] - p2[1])
-        if bw > .6*w or bh > .6*h:
-            continue
-        
-        pts.append((p1,p2))
+    n_boxes = len(data)
+    for i in range(n_boxes):
 
-    return pts
+        # only add boxes with confidence > 60%
+        if float(data['conf'][i]) > 60:
+            (x, y, w, h) = (data['left'][i], data['top'][i], data['width'][i], data['height'][i])
+            p1 = (x, y)
+            p2 = (x + w, y + h)
+
+            
+
+            # ignore bounding boxes that are > 60% of image dimensions
+            bw = abs(p1[0] - p2[0])
+            bh = abs(p1[1] - p2[1])
+            if bw > .6*img_w or bh > .6*img_h:
+                continue
+            
+            # add p1 and p2 to row
+            data.at[i, 'p1'] = p1
+            data.at[i, 'p2'] = p2
+
+    # remove rows with None values
+    data = data.dropna(subset=['p1', 'p2'])
+
+
+    return data

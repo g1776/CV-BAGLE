@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 from img_processing import set_contrast
 
 
@@ -43,6 +42,10 @@ def polygons(im, show_processed=False):
         
         shape = ""
 
+        # eliminate small polygons which are probably text
+        if (w<100 and h<100):
+            continue
+
         if n_sides == 3:
             shape = "triangle"
 
@@ -56,9 +59,7 @@ def polygons(im, show_processed=False):
         else:
             shape = "polygon"
 
-            # eliminate small, complex polygons, which are probably text
-            if (w<100 and h<100):
-                continue
+            
         
         polygons.append({"contour": contour, "shape": shape})
 

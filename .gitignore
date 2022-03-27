@@ -1,2 +1,4 @@
 MyVenv/
 download/
+volume/raw/*
+volume/test/*

@@ -9,4 +9,3 @@ def set_contrast(img, contrast):
 
     cal = cv2.addWeighted(img, Alpha, img, 0, Gamma)
     return cal  
-
