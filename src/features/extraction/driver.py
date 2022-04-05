@@ -27,6 +27,9 @@ for _ in range(N):
     G = [*extraction.glyphs.large, *extraction.glyphs.small]
     L = extraction.labels
 
+    # get mapping from pixel to coordinate system in graph
+    mapping = lambda pixel: 1*pixel # pixel2coordinate(L)
+
     # calculate label features
     F_l = [] # calc_label_features(L)
     F_G = [] # calc_glyph_features(G)
@@ -39,5 +42,6 @@ for _ in range(N):
 
     print("--- Output ---")
     print("Chart Type", c)
+    print("Pixel to Coordinate Mapping", mapping)
     print("Glyphs:", G_f)
     print("Labels:", L_f)
