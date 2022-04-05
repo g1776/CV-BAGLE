@@ -15,7 +15,7 @@ def process(im):
     return edges
 
 
-def polygons(im, show_processed=False):
+def extract_large_glyphs(im, show_processed=False):
 
     processed = process(im)
 

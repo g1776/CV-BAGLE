@@ -64,7 +64,7 @@ def preprocess(im):
     return no_lines
 
 
-def get_text_bbs(im, psm, show_processed=False):
+def get_labels(im, psm, show_processed=False):
 
 
     # preprocess
