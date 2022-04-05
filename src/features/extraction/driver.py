@@ -31,10 +31,10 @@ for _ in range(N):
     mapping = lambda pixel: 1*pixel # pixel2coordinate(L)
 
     # calculate label features
-    F_l = [] # calc_label_features(L)
+    F_L = [] # calc_label_features(L)
     F_G = [] # calc_glyph_features(G)
 
-    c = None # get_chart_type(c)
+    c = None # get_chart_type(F_L, F_G)
 
     # filter L and G by chart type
     L_f = L # filter_labels(L, c)
