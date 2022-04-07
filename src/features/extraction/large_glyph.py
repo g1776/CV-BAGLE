@@ -61,6 +61,6 @@ def extract_large_glyphs(im, show_processed=False):
 
             
         
-        polygons.append({"contour": contour, "shape": shape})
+        polygons.append({"contour": contour, "shape": shape, "n_sides": n_sides})
 
     return polygons
