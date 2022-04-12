@@ -41,7 +41,7 @@ def get_features_for_chart_in_folder(folder):
         try:
             if chart_idx % 5 == 0:
                 print(f"Chart {chart_idx}/{num_chart_fps} ({chart_fp})")
-            
+
 
             extraction = pipeline(chart_fp, VISUALIZE=False)
 

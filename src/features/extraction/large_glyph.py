@@ -1,5 +1,6 @@
 import cv2
 from img_processing import set_contrast
+import numpy as np
 
 
 def process(im):
@@ -15,9 +16,16 @@ def process(im):
     return edges
 
 
-def extract_large_glyphs(im, show_processed=False):
+def extract_large_glyphs(im, label_mask, show_processed=False):
 
     processed = process(im)
+
+
+    # apply label mask
+    mask = np.ones(processed.shape, dtype=np.uint8) * 255
+    for _, row in label_mask.iterrows():
+        mask = cv2.rectangle(mask, row["p1"], row["p2"], 0, -1)
+    processed = cv2.bitwise_and(processed, processed, mask=mask)
 
     # optionally show processed image
     if show_processed:

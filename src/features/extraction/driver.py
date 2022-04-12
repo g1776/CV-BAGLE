@@ -13,15 +13,15 @@ from features import calc_glyph_features, calc_label_features
 
 
 CHARTS_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "raw") # I apologize
-CHART_TYPE = "vertical-bar-chart"
+CHART_TYPE = "line-chart"
 chart_folder = os.path.join(CHARTS_DIR, CHART_TYPE)
-N = 1
+N = 5
 
 for _ in range(N):
     
     chart_fp = random.choice(glob.glob(os.path.join(chart_folder, '*.pkl')))
 
-    extraction = pipeline(chart_fp, VISUALIZE=False)
+    extraction = pipeline(chart_fp, VISUALIZE=True)
 
     # The sets defined in the flowchart:
     G_l = extraction.glyphs.large

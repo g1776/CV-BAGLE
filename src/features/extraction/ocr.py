@@ -58,13 +58,18 @@ def preprocess(im):
     for c in cnts:
         cv2.drawContours(no_lines, [c], -1, (0,0,0), 5)
 
+    
+    # apply opening
+    kernel = np.ones((5,5),np.uint8)
+    opening = no_lines # cv2.morphologyEx(no_lines, cv2.MORPH_OPEN, kernel)
+
     # convert back to rgba
-    no_lines  = cv2.cvtColor(no_lines,cv2.COLOR_GRAY2RGBA)
+    no_lines  = cv2.cvtColor(opening,cv2.COLOR_GRAY2RGBA)
     
     return no_lines
 
 
-def get_labels(im, psm, show_processed=False):
+def get_labels(im, psm, show_processed=True):
 
 
     # preprocess

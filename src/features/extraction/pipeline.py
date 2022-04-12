@@ -7,6 +7,7 @@ from types import SimpleNamespace
 
 
 from large_glyph import extract_large_glyphs
+from small_glyph import extract_small_glyphs
 from ocr import get_labels
 
 
@@ -52,8 +53,8 @@ def pipeline(
             labels = get_labels(im, psm=2)
 
             # get glyphs
-            large_glyphs = extract_large_glyphs(im)
-            small_glyphs = [] # extract_small_glyphs(im)
+            large_glyphs = extract_large_glyphs(im, label_mask=labels)
+            small_glyphs = extract_small_glyphs(im, label_mask=labels)
             
             if VISUALIZE:
 
@@ -70,7 +71,7 @@ def pipeline(
                     # draw bounding box
                     im = cv2.rectangle(im, bb.p1, bb.p2, (0, 255, 0), 2)
 
-                # draw large glyphs in red
+                # draw large glyphs in blue
                 for large_glyph in large_glyphs:
 
                     contour = large_glyph["contour"]
@@ -84,6 +85,20 @@ def pipeline(
                     
                     # draw contour of glyph
                     cv2.drawContours(im, [contour], 0, (0, 0, 255), 5)
+                
+                for small_glyph in small_glyphs:
+
+                    contour = small_glyph["contour"]
+
+                    # finding center point of contour and put label of shape
+                    M = cv2.moments(contour)
+                    if M['m00'] != 0.0:
+                        x = int(M['m10']/M['m00'])
+                        y = int(M['m01']/M['m00'])
+                        cv2.putText(im, small_glyph["shape"], (x, y), *FONT)
+                    
+                    # draw contour of glyph
+                    cv2.drawContours(im, [contour], 0, (255, 0, 0), 5)
 
                 # show result
                 # print(chart.labels)
