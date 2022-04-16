@@ -42,7 +42,6 @@ def extract_small_glyphs(im, label_mask, show_processed=False):
 
         # eliminate large polygons
         if cv2.contourArea(contour) > 1000:
-            print("skipping large glyph")
             continue
 
         if n_sides == 3:

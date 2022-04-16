@@ -69,7 +69,7 @@ def preprocess(im):
     return no_lines
 
 
-def get_labels(im, psm, show_processed=True):
+def get_labels(im, psm, show_processed=False):
 
 
     # preprocess
