@@ -12,7 +12,7 @@ from ocr import get_labels
 
 
 
-FONT = (cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+FONT = (cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0, 0, 0), 2)
 
 # https://stackoverflow.com/questions/16279212/how-to-use-dot-notation-for-dict-in-python
 class NestedNamespace(SimpleNamespace):
@@ -28,6 +28,7 @@ def pipeline(
     chart_fp,
     
     VISUALIZE = True,
+    test=False
     ):
     """
     To get the sets defined in the flowchart:
@@ -45,8 +46,11 @@ def pipeline(
         with open(chart_fp, 'rb') as f:
 
             # load
-            chart = pickle.load(f)
-            im = Image.open(chart.img)
+            if test:
+                im = Image.open(chart_fp).convert("RGB")
+            else:
+                chart = pickle.load(f)
+                im = Image.open(chart.img).convert("RGB")
             im = np.array(im)
 
             # get labels
@@ -103,7 +107,7 @@ def pipeline(
                 # show result
                 # print(chart.labels)
                 # print(chart.data)
-                cv2.imshow('Glyphs and labels', cv2.resize(im, (700,700)))
+                cv2.imshow('Glyphs and labels', cv2.resize(im, (600,600)))
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
 

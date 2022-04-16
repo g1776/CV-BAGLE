@@ -1,4 +1,8 @@
-import numpy as np
+import cv2
+import matplotlib.pyplot as plt
+
+def pct_extracted(truth, pred):
+    return len(list(set(truth.labels) & set(pred.labels))) / len(set(truth.labels))
 
 def clean_labels(labels):
     clean = []
@@ -53,9 +57,39 @@ def v_box_whisker_plot(pred, truth):
     return 0
 
 def vertical_bar_chart(pred, truth):
-    # print(truth.labels)
+
+    # add labels from data to truth.labels
+    truth.labels = truth.labels + truth.data.iloc[:, 0].values.tolist()
+    #preprocess
+    truth.labels = clean_labels(truth.labels)
+
+    # calculate percent of labels extracted
+    labels_metric = len(list(set(truth.labels) & set(pred.labels))) / len(set(truth.labels))
+
+    # calculate the heights of the extracted bars
+    rects = list(filter(lambda contour: contour["n_sides"] == 4, pred.glyphs.large))
+    pred_heights = np.array(list(map(lambda rect: cv2.boundingRect(rect["contour"])[3], rects)))
     
-    return 0
+    
+    # normalize truth heights
+    truth_heights = truth.data.iloc[:, 1].values
+    truth_heights = (truth_heights - np.min(truth_heights)) / (np.max(truth_heights) - np.min(truth_heights))
+
+    # normalize pred heights
+    pred_heights = (pred_heights - np.min(pred_heights)) / (np.max(pred_heights) - np.min(pred_heights))
+
+    fig, ax = plt.subplots(1,1, figsize=((10,10)))
+    x = range(0, max([len(truth_heights), len(pred_heights)]))
+    
+    ax.scatter(x[:len(truth_heights)], truth_heights, color="blue", label="truth")
+    ax.scatter(x[:len(pred_heights)], pred_heights, color="red", label="pred")
+    plt.show()
+
+    return {
+        "labels": labels_metric,
+        "glyphs": 0
+
+    }
 
 
 def eval(pred, truth, chart_type):
@@ -79,8 +113,6 @@ def eval(pred, truth, chart_type):
     
     # Format pred.labels into clean, tokenized list (general for all chart types)
     pred.labels = clean_labels(pred.labels.text)
-    print(truth.labels)
-    print(pred.labels)
 
     return chart_type_evals[chart_type](pred, truth)
 
@@ -102,11 +134,16 @@ if __name__ == "__main__":
     chart_folder = os.path.join(CHARTS_DIR, CHART_TYPE)
     N = 1
 
-    for _ in range(N):
+    for i in range(N):
+        
+        # chart_fp = glob.glob(os.path.join(chart_folder, '*.pkl'))[i]
         chart_fp = random.choice(glob.glob(os.path.join(chart_folder, '*.pkl')))
 
         with open(chart_fp, 'rb') as f:
             truth = pickle.load(f)
             pred = pipeline(chart_fp, VISUALIZE=False)
             
-            eval(pred, truth, CHART_TYPE)
+            evaluation = eval(pred, truth, CHART_TYPE)
+
+            print("Labels:", evaluation["labels"])
+            print("Glyphs:", evaluation["glyphs"])

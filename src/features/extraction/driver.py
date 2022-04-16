@@ -13,21 +13,19 @@ sys.path.append(
 from pipeline import pipeline
 from features import calc_glyph_features, calc_label_features
 
-
-CHARTS_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "raw") # I apologize
+TEST = True
 CHART_TYPE = "pie-chart"
+N = 1
+
+CHARTS_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "test" if TEST else "raw") # I apologize
 chart_folder = os.path.join(CHARTS_DIR, CHART_TYPE)
-N = 5
+
 
 for _ in range(N):
     
-    chart_fp = random.choice(glob.glob(os.path.join(chart_folder, '*.pkl')))
 
-
-    with open(chart_fp, 'rb') as f:
-        truth = pickle.load(f)
-
-    extraction = pipeline(chart_fp, VISUALIZE=True)
+    chart_fp = random.choice(glob.glob(os.path.join(chart_folder, '*.*')))
+    extraction = pipeline(chart_fp, VISUALIZE=True, test=TEST)
 
     # The sets defined in the flowchart:
     G_l = extraction.glyphs.large
