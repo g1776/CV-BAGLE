@@ -15,7 +15,7 @@ def process(im):
 
     return edges
 
-def extract_small_glyphs(im, label_mask, show_processed=False, psm=2):
+def extract_small_glyphs(im, label_mask, large_glyph_mask, show_processed=False, psm=2):
     """
     Extracts small glyphs from the image, along with more labels from the second round of OCR as part of preprocessing.
     
@@ -29,6 +29,11 @@ def extract_small_glyphs(im, label_mask, show_processed=False, psm=2):
     for _, row in label_mask.iterrows():
         mask = cv2.rectangle(mask, row["p1"], row["p2"], 0, -1)
     processed = cv2.bitwise_and(processed, processed, mask=mask)
+
+    # apply large glyph mask
+    mask = np.zeros(processed.shape, dtype=np.uint8)
+    for large_glyph in large_glyph_mask:
+        cv2.drawContours(processed, [large_glyph["contour"]], 0, 255, -1)
 
     # run label extraction again and mask
     more_labels = get_labels(cv2.cvtColor(processed, cv2.COLOR_GRAY2RGBA), psm=psm, preprocess_im=False)
