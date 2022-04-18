@@ -80,15 +80,26 @@ def calc_small_glyph_features(G_s: list[dict]):
         std_center_x = np.std([c['x'] for c in centers])
         std_centers_y = np.std([c['y'] for c in centers])
 
+        # glyph aspect ratio
+        aspect_ratios = []
+        for g in G_s:
+            x,y,w,h = cv2.boundingRect(g["contour"])
+            aspect_ratios.append(w/h)
+        aspect_ratios_mean = np.mean(aspect_ratios)
+        aspect_ratios_std = np.std(aspect_ratios)
         
     else:
         std_center_x = 0
         std_centers_y = 0
+        aspect_ratios_mean = 0 
+        aspect_ratios_std = 0
 
     return [
         std_center_x, 
         std_centers_y,
-        num_glyphs
+        num_glyphs,
+        aspect_ratios_mean, 
+        aspect_ratios_std,
     ]
 
 

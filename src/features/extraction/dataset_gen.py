@@ -100,6 +100,8 @@ if __name__ == '__main__':
         "std_center_x_small", 
         "std_centers_y_small",
         "num_glyphs_small"
+        "aspect_ratios_mean_small", 
+        "aspect_ratios_std_small",
 
         # chart file name
         "chart_fp"
