@@ -10,7 +10,7 @@ sys.path.append(
 import argparse
 
 from pipeline import pipeline
-from features import calc_glyph_features, calc_label_features
+from features import calc_large_glyph_features, calc_small_glyph_features, calc_label_features
 
 if __name__ == "__main__":
 
@@ -43,7 +43,9 @@ if __name__ == "__main__":
 
         # calculate features
         F_L = calc_label_features(L)
-        F_G = calc_glyph_features(G)
+        F_G_l = calc_large_glyph_features(G_l)
+        F_G_s = calc_small_glyph_features(G_s)
+        F_G = np.concatenate([F_G_l, F_G_s])
         F = np.concatenate([F_L, F_G])
 
 

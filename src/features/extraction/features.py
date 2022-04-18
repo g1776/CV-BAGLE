@@ -1,21 +1,21 @@
 import cv2
 import numpy as np
 
-def calc_glyph_features(G: list[dict]):
+def calc_large_glyph_features(G_l: list[dict]):
     
     # num glyphs
-    num_glyphs = len(G)
+    num_glyphs = len(G_l)
 
     if num_glyphs > 0: # if this is false, then all the other variables should be ignored.
         
         # glyph size
-        sizes = [cv2.contourArea(g['contour']) for g in G]
+        sizes = [cv2.contourArea(g['contour']) for g in G_l]
         sizes_mean = np.mean(sizes)
         sizes_std = np.std(sizes)
 
         # glyph position
         centers = []
-        for g in G:
+        for g in G_l:
             M = cv2.moments(g['contour'])
             if M['m00'] != 0.0:
                 x = int(M['m10']/M['m00'])
@@ -25,17 +25,13 @@ def calc_glyph_features(G: list[dict]):
         std_centers_y = np.std([c['y'] for c in centers])
 
         # glyph shape (num sides)
-        num_sides = [g['n_sides'] for g in G]
+        num_sides = [g['n_sides'] for g in G_l]
         num_sides_mean = np.mean(num_sides)
         num_sides_std = np.std(num_sides)
 
-        # glyph edge distance
-        # mean
-        # std
-
         # glyph aspect ratio
         aspect_ratios = []
-        for g in G:
+        for g in G_l:
             x,y,w,h = cv2.boundingRect(g["contour"])
             aspect_ratios.append(w/h)
         aspect_ratios_mean = np.mean(aspect_ratios)
@@ -64,6 +60,38 @@ def calc_glyph_features(G: list[dict]):
         aspect_ratios_std,
         num_glyphs
     ]
+
+
+def calc_small_glyph_features(G_s: list[dict]):
+    
+    # num glyphs
+    num_glyphs = len(G_s)
+
+    if num_glyphs > 0: # if this is false, then all the other variables should be ignored.
+
+        # glyph position
+        centers = []
+        for g in G_s:
+            M = cv2.moments(g['contour'])
+            if M['m00'] != 0.0:
+                x = int(M['m10']/M['m00'])
+                y = int(M['m01']/M['m00'])
+                centers.append({'x': x, 'y': y})
+        std_center_x = np.std([c['x'] for c in centers])
+        std_centers_y = np.std([c['y'] for c in centers])
+
+        
+    else:
+        std_center_x = 0
+        std_centers_y = 0
+
+    return [
+        std_center_x, 
+        std_centers_y,
+        num_glyphs
+    ]
+
+
 
 def calc_label_features(L):
     num_labels = []
