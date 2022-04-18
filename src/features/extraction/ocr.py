@@ -69,11 +69,14 @@ def preprocess(im):
     return no_lines
 
 
-def get_labels(im, psm, show_processed=False):
+def get_labels(im, psm, show_processed=False, preprocess_im=True):
 
 
     # preprocess
-    processed = preprocess(im)
+    if preprocess_im:
+        processed = preprocess(im)
+    else:
+        processed = im
 
     # optionally show processed image
     if show_processed:

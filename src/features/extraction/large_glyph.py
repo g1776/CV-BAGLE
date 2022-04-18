@@ -51,7 +51,7 @@ def extract_large_glyphs(im, label_mask, show_processed=False):
         shape = ""
 
         # eliminate small polygons which are probably text
-        if (w<100 and h<100):
+        if (w<100 or h<100):
             continue
 
         if n_sides == 3:

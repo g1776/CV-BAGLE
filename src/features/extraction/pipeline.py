@@ -58,7 +58,11 @@ def pipeline(
 
             # get glyphs
             large_glyphs = extract_large_glyphs(im, label_mask=labels)
-            small_glyphs = extract_small_glyphs(im, label_mask=labels)
+            small_glyphs_and_labels = extract_small_glyphs(im, label_mask=labels)
+            small_glyphs = small_glyphs_and_labels["glyphs"]
+
+            # add round 2 labels
+            labels.append(small_glyphs_and_labels["labels"], ignore_index=True)
             
             if VISUALIZE:
 

@@ -1,5 +1,6 @@
 import cv2
 from img_processing import set_contrast
+from ocr import get_labels
 import numpy as np
 
 def process(im):
@@ -14,8 +15,12 @@ def process(im):
 
     return edges
 
-def extract_small_glyphs(im, label_mask, show_processed=False):
+def extract_small_glyphs(im, label_mask, show_processed=False, psm=2):
+    """
+    Extracts small glyphs from the image, along with more labels from the second round of OCR as part of preprocessing.
     
+    Returns: dict of extracted glyphs and labels
+    """
 
     processed = process(im)
 
@@ -25,8 +30,17 @@ def extract_small_glyphs(im, label_mask, show_processed=False):
         mask = cv2.rectangle(mask, row["p1"], row["p2"], 0, -1)
     processed = cv2.bitwise_and(processed, processed, mask=mask)
 
+    # run label extraction again and mask
+    more_labels = get_labels(cv2.cvtColor(processed, cv2.COLOR_GRAY2RGBA), psm=psm, preprocess_im=False)
+    mask = np.ones(processed.shape, dtype=np.uint8) * 255
+    for _, row in more_labels.iterrows():
+        mask = cv2.rectangle(mask, row["p1"], row["p2"], 0, -1)
+    processed = cv2.bitwise_and(processed, processed, mask=mask)
+
     if show_processed:
         cv2.imshow('BBs processed', cv2.resize(processed, (500,500)))
+
+    
 
     #find contours 
     contours, _ = cv2.findContours(processed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -41,7 +55,7 @@ def extract_small_glyphs(im, label_mask, show_processed=False):
         n_sides = len(approx)
 
         # eliminate large polygons
-        if cv2.contourArea(contour) > 1000:
+        if w > 100 or h > 100:
             continue
 
         if n_sides == 3:
@@ -59,5 +73,9 @@ def extract_small_glyphs(im, label_mask, show_processed=False):
 
         small_glyphs.append({"contour": contour, "shape": shape, "n_sides": n_sides})
 
-    return small_glyphs
+    return {
+        "glyphs": small_glyphs,
+        "labels": more_labels
+    }
+    
     
