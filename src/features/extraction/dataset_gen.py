@@ -3,6 +3,7 @@ import sys
 import glob
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.simplefilter(action="ignore", category=RuntimeWarning)
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -27,10 +28,8 @@ chart_type_folders = glob.glob(os.path.join(CHARTS_DIR, '*'))
 def get_features_for_chart_in_folder(folder):
     out = []
 
-    # for folder_idx, folder in enumerate(chart_type_folders):
-    print(f"Folder {folder}")
-
     chart_type = os.path.basename(folder)
+    print(f"Chart Type {chart_type}")
 
     chart_fps =glob.glob(os.path.join(folder, '*.pkl'))
     num_chart_fps = len(chart_fps)
@@ -38,7 +37,7 @@ def get_features_for_chart_in_folder(folder):
 
         try:
             if chart_idx % 5 == 0:
-                print(f"Chart {chart_idx}/{num_chart_fps} ({chart_fp})")
+                print(f"Chart {chart_idx}/{num_chart_fps} ({os.path.basename(chart_fp)})")
 
 
             extraction = pipeline(chart_fp, VISUALIZE=False)
@@ -70,7 +69,7 @@ if __name__ == '__main__':
     df_list = []
 
     with Pool(processes=12) as p:
-        out = p.map(get_features_for_chart_in_folder, [chart_type_folders])
+        out = p.map(get_features_for_chart_in_folder, chart_type_folders)
         for row in out:
             for dp in row:
                 df_list.append(dp)
@@ -81,7 +80,8 @@ if __name__ == '__main__':
         'chart_type',
 
         # label features
-        "has_num_labels",
+        "n_labels",
+        "n_num_labels",
         "num_labels_x_mean",
         "num_labels_y_mean",
         "num_labels_x_std",

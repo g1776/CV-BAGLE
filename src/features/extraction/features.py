@@ -127,7 +127,8 @@ def calc_label_features(L):
 
     
     return [
-        has_num_labels,
+        len(L),
+        len(num_labels),
         num_labels_x_mean,
         num_labels_y_mean,
         num_labels_x_std,
