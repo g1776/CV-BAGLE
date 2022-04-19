@@ -5,6 +5,7 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 warnings.simplefilter(action="ignore", category=RuntimeWarning)
 import pandas as pd
+import pickle
 import numpy as np
 from pathlib import Path
 sys.path.append(
@@ -21,7 +22,7 @@ CHART_TYPE = "vertical-bar-chart"
 chart_folder = os.path.join(CHARTS_DIR, CHART_TYPE)
 
 OUT_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "processed")
-OUT_FILE = os.path.join(OUT_DIR, "features_with_small_glyphs.csv")
+OUT_FILE = os.path.join(OUT_DIR, "features.pkl")
 
 chart_type_folders = glob.glob(os.path.join(CHARTS_DIR, '*'))
 
@@ -36,7 +37,7 @@ def get_features_for_chart_in_folder(folder):
     for chart_idx, chart_fp in enumerate(chart_fps):
 
         try:
-            if chart_idx % 5 == 0:
+            if chart_idx % 25 == 0:
                 print(f"Chart {chart_idx}/{num_chart_fps} ({os.path.basename(chart_fp)})")
 
 
@@ -57,10 +58,10 @@ def get_features_for_chart_in_folder(folder):
             # add IDs
             F = [chart_type] + F + [chart_fp]
             out.append(F)
+
         except:
             print(f"Error with chart {chart_fp}")
             continue
-            
 
     return out
 
@@ -68,46 +69,12 @@ if __name__ == '__main__':
 
     df_list = []
 
-    with Pool(processes=12) as p:
-        out = p.map(get_features_for_chart_in_folder, chart_type_folders)
+    with Pool() as p:
+        out = p.imap(get_features_for_chart_in_folder, chart_type_folders)
         for row in out:
             for dp in row:
                 df_list.append(dp)
 
-    df = pd.DataFrame(df_list, columns=[
-
-        # chart type
-        'chart_type',
-
-        # label features
-        "n_labels",
-        "n_num_labels",
-        "num_labels_x_mean",
-        "num_labels_y_mean",
-        "num_labels_x_std",
-        "num_labels_y_std",
-
-        # glyph features
-        "sizes_mean_large", 
-        "sizes_std_large",
-        "std_center_x_large", 
-        "std_centers_y_large",
-        "num_sides_mean_large", 
-        "num_sides_std_large",
-        "aspect_ratios_mean_large", 
-        "aspect_ratios_std_large",
-        "num_glyphs_large",
-        "std_center_x_small", 
-        "std_centers_y_small",
-        "num_glyphs_small"
-        "aspect_ratios_mean_small", 
-        "aspect_ratios_std_small",
-
-        # chart file name
-        "chart_fp"
-
-    ])
-    df.to_csv(OUT_FILE)
-
+    pickle.dump(df_list, open(OUT_FILE, 'wb'))
 
     print("\nDONE!!!!!!!")
