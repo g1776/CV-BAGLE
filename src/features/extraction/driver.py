@@ -48,7 +48,7 @@ if __name__ == "__main__":
         F_G = np.concatenate([F_G_l, F_G_s])
         F = np.concatenate([F_L, F_G])
 
-
+        
         c = None # get_chart_type(F)
 
         print("--- Output ---")
