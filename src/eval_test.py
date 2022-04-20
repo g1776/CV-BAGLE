@@ -12,7 +12,7 @@ sys.path.extend([
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 warnings.simplefilter(action='ignore', category=RuntimeWarning)
-from sklearn.metrics import multilabel_confusion_matrix
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 
 from pipeline import pipeline
@@ -66,8 +66,9 @@ if __name__ == "__main__":
     TEST_DIR = r"C:\Users\grego\Documents\GitHub\DataVizCaptionGeneration\volume\test"
     
     y_pred = []
-    y = []
+    y_test = []
     
+
     clf = pickle.load(open(MODEL_FP, 'rb'))
     for chart_folder in glob.glob(os.path.join(TEST_DIR, '*')):
         chart_fps = glob.glob(os.path.join(chart_folder, '*.*'))
@@ -78,13 +79,14 @@ if __name__ == "__main__":
                 c = clf.predict(chart_features)[0]
 
                 y_pred.append(c)
-                y.append(chart_type)
+                y_test.append(chart_type)
                 print("Truth: {}\tPrediction: {}".format(chart_type, c))
             except:
                 print("Error:", chart_fp)
-    
-    
-       
-    # for i, con_mat in enumerate(multilabel_confusion_matrix(y, y_pred)):
-    #     print(list(set(y))[i])
-    #     print(con_mat)
+
+    # display confusion matrix
+    fig, ax = plt.subplots(1,1, figsize=(12,12))
+    ConfusionMatrixDisplay.from_predictions(y_test, y_pred, include_values=True, xticks_rotation='vertical', ax=ax, cmap="YlOrRd")
+
+    # save as svg
+    fig.savefig("test_confusion_matrix.svg")
