@@ -28,6 +28,7 @@ def pipeline(
     chart_fp,
     
     VISUALIZE = True,
+    CV2_VISUALIZE = True,
     test=False
     ):
     """
@@ -108,12 +109,13 @@ def pipeline(
                     # draw contour of glyph
                     cv2.drawContours(im, [contour], 0, (255, 0, 0), 5)
 
-                # show result
-                # print(chart.labels)
-                # print(chart.data)
-                cv2.imshow('Glyphs and labels', cv2.resize(im, (600,600)))
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
+                if CV2_VISUALIZE:
+                    # show result
+                    # print(chart.labels)
+                    # print(chart.data)
+                    cv2.imshow('Glyphs and labels', cv2.resize(im, (600,600)))
+                    cv2.waitKey(0)
+                    cv2.destroyAllWindows()
 
             # return labels and glyphs
             return NestedNamespace({
