@@ -121,7 +121,8 @@ def pipeline(
                 "glyphs": {
                     "large": large_glyphs,
                     "small": small_glyphs
-                }
+                },
+                "img": im
             })
             
 
