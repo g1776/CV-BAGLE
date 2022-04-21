@@ -52,6 +52,8 @@ def pipeline(
             else:
                 chart = pickle.load(f)
                 im = Image.open(chart.img).convert("RGB")
+            
+            im = im.resize((1028,1028))
             im = np.array(im)
 
             # get labels

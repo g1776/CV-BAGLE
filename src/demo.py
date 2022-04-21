@@ -5,6 +5,7 @@ import os
 import random
 from pathlib import Path
 import pandas as pd
+import numpy as np
 import sys
 sys.path.extend([
     os.path.join(Path(os.path.abspath(__file__)).parent, 'features/extraction'),
@@ -82,6 +83,3 @@ if random_file:
     with col2:
         st.markdown(f"##### Predicted chart class: {c}")
         st.dataframe(features)
-    
-
-

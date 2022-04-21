@@ -78,8 +78,8 @@ if __name__ == "__main__":
                 chart_features = get_chart_features(chart_fp)
                 c = clf.predict(chart_features)[0]
 
-                y_pred.append(c)
-                y_test.append(chart_type)
+                y_pred.append(c.replace("-test",""))
+                y_test.append(chart_type.replace("-test",""))
                 print("Truth: {}\tPrediction: {}".format(chart_type, c))
             except:
                 print("Error:", chart_fp)

@@ -64,8 +64,6 @@ def extract_small_glyphs(im, label_mask, large_glyph_mask, show_processed=False,
         if w > 100 or h > 100:
             continue
 
-        print(w, h)
-
         if n_sides == 3:
             shape = "triangle"
 
