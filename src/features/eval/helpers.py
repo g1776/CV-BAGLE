@@ -1,9 +1,18 @@
+import numpy as np
+import cv2
+
 class Metric:
     def __init__(self, name, value):
         self.name = name
         self.value = value
     def __repr__(self):
-        return self.name + ": " + f'{self.value:.2f}'
+        # check if var is a int or float
+        if isinstance(self.value, int) or isinstance(self.value, float):
+            return self.name + ": " + f'{self.value}'
+        elif isinstance(self.value, list):
+            return self.name + ": " + f'{self.value}'
+            
+        
     __str__ = __repr__
 
 class Eval:
@@ -21,6 +30,7 @@ def clean_labels(labels):
     clean = []
     for label in labels:
         if label != None:
+            label = str(label)
 
             # tokenize by spaces
             words = label.split(" ")
@@ -35,3 +45,30 @@ def clean_labels(labels):
             # add to cumulative list
             clean.extend(words_clean)
     return clean
+
+def map_point_to_glyph(pred, truth, dist_f, starting_dist=np.inf):
+    matched_idxs = {} # the indices matched in the truth data
+    for pred_val in pred:
+        min_dist = starting_dist
+        min_idx = -1
+        for idx, true_val in enumerate(truth):
+            dist = abs(dist_f(pred_val, true_val))
+            if dist < min_dist:
+                min_dist = dist
+                min_idx = idx
+        if str(min_idx) in matched_idxs:
+            # check if smaller than current closest point to the bar at min_idx
+            if min_dist < matched_idxs[str(min_idx)]:
+                matched_idxs[str(min_idx)] = min_dist
+        else:
+            matched_idxs[str(min_idx)] = min_dist
+    
+    return matched_idxs
+
+def contour_center(contour):
+    # get cv2 bounding box
+    x, y, w, h = cv2.boundingRect(contour)
+    return (x + w/2, y + h/2)
+
+def normalize(arr):
+    return (arr - np.min(arr)) / (np.max(arr) - np.min(arr))

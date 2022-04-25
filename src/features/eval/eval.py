@@ -1,4 +1,5 @@
 from bar import bar_chart
+from scatter import scatter_chart
 from helpers import clean_labels
 
 import warnings
@@ -32,9 +33,6 @@ def stacked_bar_chart(pred, truth):
 def unfit_density_histogram_plot(pred, truth):
     return 0
 
-def unfit_regression_plot(pred, truth):
-    return 0
-
 def v_box_whisker_plot(pred, truth):
     return 0
 
@@ -51,7 +49,7 @@ def eval(pred, truth, chart_type):
         "pie-chart": pie_chart,
         "stacked-bar-chart": stacked_bar_chart,
         "unfit-density-histogram-plot": unfit_density_histogram_plot,
-        "unfit-regression-plot": unfit_regression_plot,
+        "unfit-regression-plot": lambda pred, truth: scatter_chart(pred, truth),
         "v-box-whisker-plot": v_box_whisker_plot,
         "vertical-bar-chart": lambda pred, truth: bar_chart(pred, truth, 'v')
     }
@@ -81,7 +79,7 @@ if __name__ == "__main__":
 
 
     CHARTS_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "raw") # I apologize
-    CHART_TYPE = "horizontal-bar-chart"
+    CHART_TYPE = "unfit-regression-plot"
     chart_folder = os.path.join(CHARTS_DIR, CHART_TYPE)
     N = 1
 

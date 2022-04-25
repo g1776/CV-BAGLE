@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from helpers import Eval, Metric, clean_labels
+from helpers import Eval, Metric, clean_labels, map_point_to_glyph
 
 def bar_chart(pred, truth, orient='v'):
 
@@ -25,21 +25,7 @@ def bar_chart(pred, truth, orient='v'):
         pred_hws = (pred_hws - np.min(pred_hws)) / (np.max(pred_hws) - np.min(pred_hws))
         
         # calculate closest match between truth and pred hws
-        matched_idxs = {} # the indices matched in the truth data
-        for pred_hw in pred_hws:
-            min_dist = np.inf
-            min_idx = -1
-            for idx, truth_hw in enumerate(truth_hws):
-                dist = abs(pred_hw - truth_hw)
-                if dist < min_dist:
-                    min_dist = dist
-                    min_idx = idx
-            if str(min_idx) in matched_idxs:
-                # check if smaller than current closest point to the bar at min_idx
-                if min_dist < matched_idxs[str(min_idx)]:
-                    matched_idxs[str(min_idx)] = min_dist
-            else:
-                matched_idxs[str(min_idx)] = min_dist
+        matched_idxs = map_point_to_glyph(pred_hws, truth_hws)
         
         avg_distance = np.mean(list(matched_idxs.values()))
         num_bars_found = len(list(matched_idxs.keys()))
