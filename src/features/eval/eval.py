@@ -6,34 +6,37 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
+# 1
+def unfit_density_histogram_plot(pred, truth):
+    return 0
+
 def fit_density_histogram_plot(pred, truth):
     return 0
 
-def fit_regression_plot(pred, truth):
-    return 0
 
-def h_box_whisker_plot(pred, truth):
-    return 0
-
-def horizontal_bar_chart(pred, truth):
-    return 0
-
+# 2
 def line_chart(pred, truth):
     return 0
 
-def normalized_stacked_bar_chart(pred, truth):
+
+# 3
+def pie_chart(pred, truth):
     return 0
 
-def pie_chart(pred, truth):
+
+# 4
+def normalized_stacked_bar_chart(pred, truth):
     return 0
 
 def stacked_bar_chart(pred, truth):
     return 0
 
-def unfit_density_histogram_plot(pred, truth):
+
+# 5
+def v_box_whisker_plot(pred, truth):
     return 0
 
-def v_box_whisker_plot(pred, truth):
+def h_box_whisker_plot(pred, truth):
     return 0
 
 
@@ -41,7 +44,7 @@ def v_box_whisker_plot(pred, truth):
 def eval(pred, truth, chart_type):
     chart_type_evals = {
         "fit-density-histogram-plot": fit_density_histogram_plot,
-        "fit-regression-plot": fit_regression_plot,
+        "fit-regression-plot": lambda pred, truth: scatter_chart(pred, truth),
         "h-box-whisker-plot": h_box_whisker_plot,
         "horizontal-bar-chart": lambda pred, truth: bar_chart(pred, truth, 'h'),
         "line-chart": line_chart,
