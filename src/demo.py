@@ -62,8 +62,9 @@ def get_chart_features(extraction):
     ])
 
 
+
 st.markdown("# CV-BAGLE")
-st.markdown("## Computer Vision-Based Glyph and Label Extraction")
+st.markdown("## Computer Vision-BAsed Glyph and Label Extraction")
 
 random_file = st.button("Get chart from training data")
 

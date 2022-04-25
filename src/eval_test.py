@@ -12,7 +12,7 @@ sys.path.extend([
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 warnings.simplefilter(action='ignore', category=RuntimeWarning)
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import ConfusionMatrixDisplay, accuracy_score
 
 
 from pipeline import pipeline
@@ -90,3 +90,6 @@ if __name__ == "__main__":
 
     # save as svg
     fig.savefig("test_confusion_matrix.svg")
+
+    print("Accuracy:", accuracy_score(y_test, y_pred))
+    plt.show()
