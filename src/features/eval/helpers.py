@@ -46,7 +46,7 @@ def clean_labels(labels):
             clean.extend(words_clean)
     return clean
 
-def map_point_to_glyph(pred, truth, dist_f, starting_dist=np.inf):
+def map_point_to_glyph(pred, truth, dist_f=lambda pred, truth: pred - truth, starting_dist=np.inf):
     matched_idxs = {} # the indices matched in the truth data
     for pred_val in pred:
         min_dist = starting_dist

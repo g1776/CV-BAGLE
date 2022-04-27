@@ -2,3 +2,4 @@ MyVenv/
 download/
 volume/raw/*
 volume/test/*
+src/models/*

@@ -1,7 +1,4 @@
 import numpy as np 
-import matplotlib.pyplot as plt
-import cv2
-from zmq import PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_UNSPECIFIED
 from helpers import Eval, Metric, clean_labels, map_point_to_glyph, contour_center, normalize
 
 def scatter_chart(pred, truth):
@@ -20,7 +17,7 @@ def scatter_chart(pred, truth):
 
 
     else:
-        # normalize truth hws
+      
         truth_coords = truth.data.values
 
         # flip ys

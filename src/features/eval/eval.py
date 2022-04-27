@@ -1,5 +1,6 @@
 from bar import bar_chart
 from scatter import scatter_chart
+from pie import pie_chart
 from helpers import clean_labels
 
 import warnings
@@ -16,11 +17,6 @@ def fit_density_histogram_plot(pred, truth):
 
 # 2
 def line_chart(pred, truth):
-    return 0
-
-
-# 3
-def pie_chart(pred, truth):
     return 0
 
 
@@ -82,7 +78,7 @@ if __name__ == "__main__":
 
 
     CHARTS_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "raw") # I apologize
-    CHART_TYPE = "unfit-regression-plot"
+    CHART_TYPE = "pie-chart"
     chart_folder = os.path.join(CHARTS_DIR, CHART_TYPE)
     N = 1
 
@@ -93,8 +89,10 @@ if __name__ == "__main__":
 
         with open(chart_fp, 'rb') as f:
             truth = pickle.load(f)
+            print("running pipeline...")
             pred = pipeline(chart_fp, VISUALIZE=True)
             
+            print("evaluating...")
             evaluation = eval(pred, truth, CHART_TYPE)
 
             print(evaluation)
