@@ -1,18 +1,12 @@
 from bar import bar_chart
 from scatter import scatter_chart
 from pie import pie_chart
+from histogram import histogram_chart
+
 from helpers import clean_labels
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
-
-
-# 1
-def unfit_density_histogram_plot(pred, truth):
-    return 0
-
-def fit_density_histogram_plot(pred, truth):
-    return 0
 
 
 # 4
@@ -34,7 +28,7 @@ def h_box_whisker_plot(pred, truth):
 
 def eval(pred, truth, chart_type):
     chart_type_evals = {
-        "fit-density-histogram-plot": fit_density_histogram_plot,
+        "fit-density-histogram-plot": histogram_chart,
         "fit-regression-plot": scatter_chart,
         "h-box-whisker-plot": h_box_whisker_plot,
         "horizontal-bar-chart": lambda pred, truth: bar_chart(pred, truth, 'h'),
@@ -42,7 +36,7 @@ def eval(pred, truth, chart_type):
         "normalized-stacked-bar-chart": normalized_stacked_bar_chart,
         "pie-chart": pie_chart,
         "stacked-bar-chart": stacked_bar_chart,
-        "unfit-density-histogram-plot": unfit_density_histogram_plot,
+        "unfit-density-histogram-plot": histogram_chart,
         "unfit-regression-plot": scatter_chart,
         "v-box-whisker-plot": v_box_whisker_plot,
         "vertical-bar-chart": lambda pred, truth: bar_chart(pred, truth, 'v')
@@ -73,7 +67,7 @@ if __name__ == "__main__":
 
 
     CHARTS_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "raw") # I apologize
-    CHART_TYPE = "line-chart"
+    CHART_TYPE = "unfit-density-histogram-plot"
     chart_folder = os.path.join(CHARTS_DIR, CHART_TYPE)
     N = 1
 
