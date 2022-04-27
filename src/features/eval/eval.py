@@ -15,11 +15,6 @@ def fit_density_histogram_plot(pred, truth):
     return 0
 
 
-# 2
-def line_chart(pred, truth):
-    return 0
-
-
 # 4
 def normalized_stacked_bar_chart(pred, truth):
     return 0
@@ -40,15 +35,15 @@ def h_box_whisker_plot(pred, truth):
 def eval(pred, truth, chart_type):
     chart_type_evals = {
         "fit-density-histogram-plot": fit_density_histogram_plot,
-        "fit-regression-plot": lambda pred, truth: scatter_chart(pred, truth),
+        "fit-regression-plot": scatter_chart,
         "h-box-whisker-plot": h_box_whisker_plot,
         "horizontal-bar-chart": lambda pred, truth: bar_chart(pred, truth, 'h'),
-        "line-chart": line_chart,
+        "line-chart": lambda pred, truth: scatter_chart(pred, truth, is_line_chart=True),
         "normalized-stacked-bar-chart": normalized_stacked_bar_chart,
         "pie-chart": pie_chart,
         "stacked-bar-chart": stacked_bar_chart,
         "unfit-density-histogram-plot": unfit_density_histogram_plot,
-        "unfit-regression-plot": lambda pred, truth: scatter_chart(pred, truth),
+        "unfit-regression-plot": scatter_chart,
         "v-box-whisker-plot": v_box_whisker_plot,
         "vertical-bar-chart": lambda pred, truth: bar_chart(pred, truth, 'v')
     }
@@ -78,7 +73,7 @@ if __name__ == "__main__":
 
 
     CHARTS_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "raw") # I apologize
-    CHART_TYPE = "pie-chart"
+    CHART_TYPE = "line-chart"
     chart_folder = os.path.join(CHARTS_DIR, CHART_TYPE)
     N = 1
 

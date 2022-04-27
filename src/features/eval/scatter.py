@@ -1,9 +1,10 @@
 import numpy as np 
 from helpers import Eval, Metric, clean_labels, map_point_to_glyph, contour_center, normalize
 
-def scatter_chart(pred, truth):
-    truth.labels = clean_labels(truth.labels)
-    truth.labels += clean_labels(list(truth.data.columns))
+def scatter_chart(pred, truth, is_line_chart=False):
+    if not is_line_chart:
+        truth.labels += clean_labels(list(truth.data.columns))
+        truth.labels += clean_labels(list(truth.data.category.unique()))
     labels_metric = len(list(set(truth.labels) & set(pred.labels))) / len(set(truth.labels))
 
     # pts = list(filter(lambda contour: contour["shape"] == "polygon", pred.glyphs.small)) #parameters right???
@@ -17,8 +18,9 @@ def scatter_chart(pred, truth):
 
 
     else:
-      
-        truth_coords = truth.data.values
+        
+        
+        truth_coords = truth.data.iloc[:, :2].values
 
         # flip ys
         pred_coords[:, 1] = 1 - pred_coords[:, 1]
@@ -30,7 +32,7 @@ def scatter_chart(pred, truth):
 
         # calculate closest match between truth and pred hws
         mapping = map_point_to_glyph(pred_coords, truth_coords, dist_f=lambda pred_coord, truth_coord: np.linalg.norm(pred_coord - truth_coord))
-        
+
 
     return Eval(
         label_metrics=[Metric(r"% of labels extracted", labels_metric)],
