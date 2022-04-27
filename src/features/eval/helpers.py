@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import pandas as pd
 
 class Metric:
     def __init__(self, name, value):
@@ -19,6 +20,15 @@ class Eval:
     def __init__(self, label_metrics, glyph_metrics):
         self.label_metrics = label_metrics
         self.glyph_metrics = glyph_metrics
+
+    def to_list(self):
+        out = []
+        for metric in self.label_metrics:
+            out.append({"name": metric.name, "value": metric.value, "type": "label"})
+        for metric in self.glyph_metrics:
+            out.append({"name": metric.name, "value": metric.value, "type": "glyph"})
+        return out
+        
     def __repr__(self):
         return "Label Metrics: " + str(self.label_metrics) + "\nGlyph Metrics: " + str(self.glyph_metrics)
     __str__ = __repr__
