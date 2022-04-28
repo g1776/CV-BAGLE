@@ -17,7 +17,6 @@ def box_whisker(pred, truth, orient = 'v'):
     pred_hws = np.array(list(map(lambda rect: cv2.boundingRect(rect["contour"])[3 if orient=="v" else 2], rects))) # hw = height/width
     if len(pred_hws) == 0:
         avg_distance = -1
-        range_accuracy = -1
     else:
 
         

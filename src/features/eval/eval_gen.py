@@ -16,12 +16,13 @@ from scatter import scatter_chart
 from pie import pie_chart
 from histogram import histogram_chart
 from box import box_whisker
+from stacked_bar import stacked_bar_chart
 from pipeline import pipeline
 
 from helpers import clean_labels
 
 # GLOBALS
-CHART_TYPE = "v-box-whisker-chart"
+CHART_TYPE = "unfit-regression-plot"
 CHARTS_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "raw") # I apologize
 chart_folder = os.path.join(CHARTS_DIR, CHART_TYPE)
 OUT_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "processed")
@@ -29,21 +30,13 @@ OUT_FILE = os.path.join(OUT_DIR, f"eval_{CHART_TYPE}.pkl")
 
 chart_fps = glob.glob(os.path.join(chart_folder, '*.pkl'))
 
-
-# 4
-def normalized_stacked_bar_chart(pred, truth):
-    return 0
-
-def stacked_bar_chart(pred, truth):
-    return 0
-
 chart_type_evals = {
         "fit-density-histogram-plot": histogram_chart,
         "fit-regression-plot": scatter_chart,
         "h-box-whisker-chart": lambda pred, truth: box_whisker(pred, truth, 'h'),
         "horizontal-bar-chart": lambda pred, truth: bar_chart(pred, truth, 'h'),
         "line-chart": lambda pred, truth: scatter_chart(pred, truth, is_line_chart=True),
-        "normalized-stacked-bar-chart": normalized_stacked_bar_chart,
+        "normalized-stacked-bar-chart": stacked_bar_chart,
         "pie-chart": pie_chart,
         "stacked-bar-chart": stacked_bar_chart,
         "unfit-density-histogram-plot": histogram_chart,
