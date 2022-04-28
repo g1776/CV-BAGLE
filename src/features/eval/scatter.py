@@ -4,7 +4,8 @@ from helpers import Eval, Metric, clean_labels, map_point_to_glyph, contour_cent
 def scatter_chart(pred, truth, is_line_chart=False):
     if not is_line_chart:
         truth.labels += clean_labels(list(truth.data.columns))
-        truth.labels += clean_labels(list(truth.data.category.unique()))
+        if "category" in truth.data.columns:
+            truth.labels += clean_labels(list(truth.data.category.unique()))
     labels_metric = len(list(set(truth.labels) & set(pred.labels))) / len(set(truth.labels))
 
     # pts = list(filter(lambda contour: contour["shape"] == "polygon", pred.glyphs.small)) #parameters right???
