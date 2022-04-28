@@ -2,12 +2,9 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 import cv2
-from helpers import Eval, Metric, clean_labels, map_point_to_glyph, normalize
+from helpers import Eval, Metric, map_point_to_glyph, normalize
 
 def histogram_chart(pred, truth):
-
-    # add labels from data to truth.labels and clean
-    truth.labels = clean_labels(truth.labels + truth.data.iloc[:, 0].values.tolist())
 
     # calculate percent of labels extracted
     labels_metric = len(list(set(truth.labels) & set(pred.labels))) / len(set(truth.labels))
