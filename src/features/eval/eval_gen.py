@@ -2,6 +2,7 @@ from multiprocessing import Pool
 import os, sys, glob
 from pathlib import Path
 import pickle
+
 sys.path.extend([
     os.path.join(Path(os.path.abspath(__file__)).parent.parent, 'extraction'),
     os.path.join(Path(os.path.abspath(__file__)).parent.parent, 'gen')
@@ -14,12 +15,13 @@ from bar import bar_chart
 from scatter import scatter_chart
 from pie import pie_chart
 from histogram import histogram_chart
+from box import box_whisker
 from pipeline import pipeline
 
 from helpers import clean_labels
 
 # GLOBALS
-CHART_TYPE = "fit-density-histogram-plot"
+CHART_TYPE = "h-box-whisker-chart"
 CHARTS_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "raw") # I apologize
 chart_folder = os.path.join(CHARTS_DIR, CHART_TYPE)
 OUT_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "processed")
@@ -35,18 +37,10 @@ def normalized_stacked_bar_chart(pred, truth):
 def stacked_bar_chart(pred, truth):
     return 0
 
-
-# 5
-def v_box_whisker_plot(pred, truth):
-    return 0
-
-def h_box_whisker_plot(pred, truth):
-    return 0
-
 chart_type_evals = {
         "fit-density-histogram-plot": histogram_chart,
         "fit-regression-plot": scatter_chart,
-        "h-box-whisker-plot": h_box_whisker_plot,
+        "h-box-whisker-chart": lambda pred, truth: box_whisker(pred, truth, 'h'),
         "horizontal-bar-chart": lambda pred, truth: bar_chart(pred, truth, 'h'),
         "line-chart": lambda pred, truth: scatter_chart(pred, truth, is_line_chart=True),
         "normalized-stacked-bar-chart": normalized_stacked_bar_chart,
@@ -54,7 +48,7 @@ chart_type_evals = {
         "stacked-bar-chart": stacked_bar_chart,
         "unfit-density-histogram-plot": histogram_chart,
         "unfit-regression-plot": scatter_chart,
-        "v-box-whisker-plot": v_box_whisker_plot,
+        "v-box-whisker-chart": lambda pred, truth: box_whisker(pred, truth, 'v'),
         "vertical-bar-chart": lambda pred, truth: bar_chart(pred, truth, 'v')
     }
 
