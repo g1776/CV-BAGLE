@@ -21,7 +21,7 @@ from pipeline import pipeline
 from helpers import clean_labels
 
 # GLOBALS
-CHART_TYPE = "h-box-whisker-chart"
+CHART_TYPE = "v-box-whisker-chart"
 CHARTS_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "raw") # I apologize
 chart_folder = os.path.join(CHARTS_DIR, CHART_TYPE)
 OUT_DIR = os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent.parent, "volume", "processed")
