@@ -1,46 +1,25 @@
-# DataVizCaptionGeneration
- DS 340W Final Project - Data Viz Caption Generation
+# CV-BAGLE
+## Computer Vision-BAsed Glyph And Label Extraction
+ DS 340W Final Project
 
+![CV-BAGLE](https://c.tenor.com/mOI0fyd2QpYAAAAd/laptop-bagel-net.gif)
 
-# Charts
-- Scatter with trend line
-- Scatter
-- Horizontal Bar
-- Vertical Bar
-- Stacked Bar
-- Normalized Stacked Bar
-- Pie
-- Histogram
-- Horizontal Box and Whisker
-- Vertical Box and Whisker
-- Line
-- Heatmap
+### File Structure
 
-
-# Allocations
-## Greg
-- hor bar
-- vert bar
-- stacked bar
-
-## Ian
-- pie
-- box and whisker (vert)
-- box and whisker (hor)
-- line
-
-## Shiv
-- scatter (with and without regression)
-- histogram
-- heatmap
-
-
-# Glyphs to extract
-- Points
-- Lines
-- Polygons
-
-# Labels to extract
-- Title
-- Axis labels
-- Legend?
+- src
+    - models
+        - Contains the classification models (not included in repo)
+    - features
+        - eval
+            - GLE performance evaluation. (Figures IV and V in the paper)
+        - extraction
+            - GLE Implementation.
+        - gen
+            - Synthetic dataset generation.
+- volume
+    - processed
+        - Contains the Glyph and Label features dataset calculated for all of the training data, as well as the GLE metrics dataset.
+    - raw
+        - The synthetic dataset
+    - test
+        - Real-world data, in the same format as `/raw`.
