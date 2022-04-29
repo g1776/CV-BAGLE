@@ -2,8 +2,6 @@
 ## Computer Vision-BAsed Glyph And Label Extraction
  DS 340W Final Project
 
-![CV-BAGLE](https://c.tenor.com/mOI0fyd2QpYAAAAd/laptop-bagel-net.gif)
-
 ### File Structure
 
 - src
